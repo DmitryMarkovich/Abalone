@@ -60,20 +60,21 @@ problem for your data. In particular, you should:
   training data output.
 \end{enumerate}
 
-Test images from Dmitriy are depicted on Fig.~\ref{fig:test}.
-\begin{figure}
-  \begin{minipage}{0.49\textwidth}
-    \includegraphics[width = 0.99\textwidth]{download.jpg}
-  \end{minipage} \hfill
-  \begin{minipage}{0.49\textwidth}
-    \includegraphics[width = 0.99\textwidth]{webmd_rf_photo_of_liver_and_hepatitis_virus.jpg}
-  \end{minipage} \vfill
-  \caption{Test figures of Hepatitis from Dmitriy.}
-  \label{fig:test}
-\end{figure}
+%% Test images from Dmitriy are depicted on Fig.~\ref{fig:test}.
+%% \begin{figure}
+%%   \begin{minipage}{0.49\textwidth}
+%%     \includegraphics[width = 0.99\textwidth]{download.jpg}
+%%   \end{minipage} \hfill
+%%   \begin{minipage}{0.49\textwidth}
+%%     \includegraphics[width = 0.99\textwidth]{webmd_rf_photo_of_liver_and_hepatitis_virus.jpg}
+%%   \end{minipage} \vfill
+%%   \caption{Test figures of Hepatitis from Dmitriy.}
+%%   \label{fig:test}
+%% \end{figure}
 %%%%%%%%%%%%%%%%%%%% Classification %%%%%%%%%%%%%%%%%%%%
 \section{Classification}
 \label{sec:classification}
+
 \begin{enumerate}
 \item Explain which classification problem you have chosen to solve.
 \item Apply at least three of the following methods: Decision Trees
@@ -97,41 +98,67 @@ Test images from Dmitriy are depicted on Fig.~\ref{fig:test}.
   outputs to be the largest class in the training data.
 \end{enumerate}
 
+
+The classification problem for the dataset is to predict the age range
+of abalones using their measured physical characteristics.  Age in
+years as an attribute can be calculated from the Rings attribute as
+Age = 1.5 + Rings.  Age range may be obtained from the Age attributes
+by splitting it into a number of groups.  Grouping can be done in a
+variety of ways, but it is wise to group the data in a way that the
+number of counts in each group is at least on the same scale.  The
+distribution of Age attribute and its splitting into 5 groups is
+presented in Fig.~\ref{fig:age_grouping}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width = 0.99\textwidth]{age_grouping.pdf}
+  \caption{Distribution and grouping of Age attribute.}
+  \label{fig:age_grouping}
+\end{figure}
+
+Each of the groups in Fig.~\ref{fig:age_grouping} represents a certain
+class, that the Age attribute belongs to.  So we can proceed with
+predicting the age range or the class of age using other attributes.
+The results of applyig a decision tree method are presented in
+Fig.~\ref{fig:decision_tree}.
+
+
 \begin{figure}[htbp]
   \centering
   \includegraphics[width = 0.99\textwidth]{decision_tree.pdf}
-  \caption{Decision tree for hepatitis dataset.}
+  \caption{Decision tree for the class of Age attribute.}
   \label{fig:decision_tree}
 \end{figure}
 
-\begin{lstlisting}[label = lst:logistic_regression, caption = {Results of logistic regression}]
-  Call:
-glm(formula = Class ~ Malaise + Ascites + Bilirubin + Histology, 
-    family = binomial(link = logit), data = data)
+%% \begin{lstlisting}[label = lst:logistic_regression, caption = {Results of logistic regression}]
+%%   Call:
+%% glm(formula = Class ~ Malaise + Ascites + Bilirubin + Histology, 
+%%     family = binomial(link = logit), data = data)
 
-Deviance Residuals: 
-    Min       1Q   Median       3Q      Max  
--2.7029   0.2382   0.2888   0.4330   1.8019  
+%% Deviance Residuals: 
+%%     Min       1Q   Median       3Q      Max  
+%% -2.7029   0.2382   0.2888   0.4330   1.8019  
 
-Coefficients:
-            Estimate Std. Error z value Pr(>|z|)   
-(Intercept)   1.2874     0.8407   1.531  0.12567   
-Malaise       0.9020     0.5670   1.591  0.11162   
-Ascites       1.9074     0.6621   2.881  0.00397 **
-Bilirubin    -0.7838     0.2613  -3.000  0.00270 **
-Histology    -0.9933     0.6132  -1.620  0.10529   
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+%% Coefficients:
+%%             Estimate Std. Error z value Pr(>|z|)   
+%% (Intercept)   1.2874     0.8407   1.531  0.12567   
+%% Malaise       0.9020     0.5670   1.591  0.11162   
+%% Ascites       1.9074     0.6621   2.881  0.00397 **
+%% Bilirubin    -0.7838     0.2613  -3.000  0.00270 **
+%% Histology    -0.9933     0.6132  -1.620  0.10529   
+%% ---
+%% Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-(Dispersion parameter for binomial family taken to be 1)
+%% (Dispersion parameter for binomial family taken to be 1)
 
-    Null deviance: 145.117  on 144  degrees of freedom
-Residual deviance:  91.903  on 140  degrees of freedom
-  (10 observations deleted due to missingness)
-AIC: 101.9
+%%     Null deviance: 145.117  on 144  degrees of freedom
+%% Residual deviance:  91.903  on 140  degrees of freedom
+%%   (10 observations deleted due to missingness)
+%% AIC: 101.9
 
-Number of Fisher Scoring iterations: 5
-\end{lstlisting}
+%% Number of Fisher Scoring iterations: 5
+%% \end{lstlisting}
+
 %%%%%%%%%%%%%%%%%%%% Results and Discussion %%%%%%%%%%%%%%%%%%%%
 \section{Results and Discussion}
 \label{sec:results_and_discussion}

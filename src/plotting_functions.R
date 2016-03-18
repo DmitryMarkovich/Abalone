@@ -1,3 +1,34 @@
+PlotAgeGrouping <- function(n.groups = 5) {
+    Age <- LoadData(binarize = FALSE)$Age;
+    pdf(paste0(project.path, "/output/age_grouping.pdf"), width = 2 * 12, height = 9,
+        bg = "white");
+    par(mfrow = c(1, 2));
+
+    ## par(mar = c(5, 5, 2, 0.5), mgp = c(10, 1, 0));
+    barplot(table(Age),
+            xlab = "Age, years", ylab = NA, las = 1,
+            cex.lab = 2, cex.axis = 2, cex.names = 2, cex.main = 2,
+            main = "Distribution of Age in years"
+            );
+    text(x = -2, 650, labels = paste0("Counts"),
+         srt = 0, pos = 1, xpd = TRUE, adj = 1, cex = 2);
+
+    ## par(mar = c(5, 5, 2, 0.5), mgp = c(10, 1, 0));
+    barplot(table(cut2(x = Age, g = n.groups)),
+            xlab = "Age, years", ylab = NA, las = 1,
+            cex.lab = 2, cex.axis = 2, cex.names = 2, cex.main = 2,
+            main = "Grouping of Age in years"
+            );
+    text(x = -0.2, 3250, labels = paste0("Counts"),
+         srt = 0, pos = 1, xpd = TRUE, adj = 1, cex = 2);
+
+    dev.off();
+}  ## End of PlotAgeGrouping
+
+
+
+
+
 PlotPCAVariations <- function(SVD) {
     N <- length(SVD$d);
     ## par(mar = c(4, 4, 0.2, 1.1), cex.lab = .95, cex.axis = .9,
@@ -109,7 +140,8 @@ PlotCorrelationofContinuosAttributes <- function() {
 }  ## End of PlotCorrelationofContinuosAttributes
 
 PlotDecisionTree <- function(tree) {
-    pdf(file = paste0(project.path, "/output/decision_tree.pdf"), width = 16, height = 9, bg = "white");
+    pdf(file = paste0(project.path, "/output/decision_tree.pdf"),
+        width = 16, height = 9, bg = "white");
     fancyRpartPlot(model = tree, main = "Decision Tree plot", sub = NA,
                    cex = 1.05, cex.main = 2, split.cex = 1.1, under.cex = 2, nn.cex = 1.1,
                    max.auto.cex = 2, branch.lwd = 2, accept.cex = 2);

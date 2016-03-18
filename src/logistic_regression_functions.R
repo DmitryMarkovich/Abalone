@@ -5,7 +5,7 @@ FitLogisticRegression <- function() {
     str(data);
     fit <- NULL;
     fit <- glm(formula = Class ~ Malaise + Ascites + Bilirubin + Histology,
-               family = binomial(link = logit), data = data);31
+               family = binomial(link = logit), data = data);
     if (!is.null(fit)) {
         return(fit);
     } else {

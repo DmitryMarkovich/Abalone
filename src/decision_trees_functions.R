@@ -1,24 +1,26 @@
-MakeDecisionTree <- function() {
-    data <- LoadData(fact = TRUE, fact.na = FALSE,
-                     na.rm = FALSE)[, c("Class", "Malaise", "Ascites",
-                         "Bilirubin", "Histology")];
+MakeDecisionTree <- function(n.breaks = 5) {
+    data <- LoadData(binarize = FALSE);
+    data$Class <- cut2(data$Age, g = n.breaks);
     ## str(data);
+    fmla <- as.formula(c("Class ~ ", paste0(kAttributeNames[-9], collapse = " + ")));
+    ## print(fmla);
     tree <- NULL;
-    tree <- rpart(formula = Class ~ Malaise + Ascites + Bilirubin + Histology,
+    tree <- rpart(formula = fmla,
                   data = data, method = "class",
-                  control = rpart.control(
+                  ## control = rpart.control(
 ### minsplit - the minimum number of observations that must exist in a
 ### node in order for a split to be attempted.
-                      minsplit = 5,
+                      ## minsplit = n.breaks,
 ### minbucket - the minimum number of observations in any terminal
 ### ‘<leaf>’ node.
-                      minbucket = 2,
+                      ## minbucket = 1,
 ### cp - complexity parameter.  Any split that does not decrease the
 ### overall lack of fit by a factor of ‘cp’ is not attempted.
-                      cp = 0.01,
+                      ## cp = 0.01,
 ### "information", "gini"
-                      parms = list(split = "gini")
-                      ));
+                  ##     parms = list(split = "information")
+                  ## )
+                  );
     if (!is.null(tree)) {
         return(tree);
     } else {

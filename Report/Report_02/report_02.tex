@@ -1,0 +1,170 @@
+%%%%%%%%%%%%%%%%%%%% Preamble %%%%%%%%%%%%%%%%%%%%
+\documentclass[10pt, paper=a4]{article}
+\usepackage{amssymb,amsfonts,amsmath,latexsym,amsthm, mathtools} %mathtext,
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{chngpage}
+\usepackage[font=footnotesize, labelsep=period]{caption}
+\usepackage{cite}
+\usepackage[scale=0.925]{geometry}
+\graphicspath{{images/}}
+\usepackage[pdftex,unicode,colorlinks, citecolor=blue,
+  filecolor=black, linkcolor=blue, urlcolor=blue]{hyperref}
+\usepackage[figure,table]{hypcap}
+%%%%%%%%%%%%%%%%%%%% Document %%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%%%%% Title page %%%%%%%%%%%%%%%%%%%%
+\title{Report 02}
+
+\author{ Dmitriy Markovich, Julian Lemos Vinasco}
+
+\date{}
+
+\maketitle
+
+\begin{abstract}
+  Objective: The objective of this second report is to apply the
+  methods you have learned in the second section of the course on
+  ”Supervised learning: Classification and regression” in order to
+  solve both a relevant classification and regression problem for your
+  data.
+\end{abstract}
+
+%%%%%%%%%%%%%%%%%%%% Introduction %%%%%%%%%%%%%%%%%%%%
+\section{Regression}
+\label{sec:regression}
+In this section of the report you are to solve a relevant regression
+problem for your data. In particular, you should:
+\begin{enumerate}
+\item Explain which regression problem you have chosen to solve.
+\item Apply linear regression with forward selection and consider if
+  transforming or combining attributes potentially may be useful. For
+  linear regression, plotting the residual error vs. the attributes
+  can give some insight into whether in- cluding a transformation of a
+  variable can improve the model, i.e. potentially describe parts of
+  the residuals.
+\item Explain how a new data observation is predicted according to the
+  estimated model. I.e. what are the effects of the selected
+  attributes in terms of predicting the data.  (Notice, if you
+  interpret the magnitude of the estimated coefficients this in
+  general requires that each attribute be normalized prior to the
+  analysis).
+\item Fit an artificial neural network (ANN) model to the data.
+\item Statistically evaluate if there is a significant performance
+  difference between the fitted ANN and linear regression models based
+  on the same cross-validation splits (i.e., use a paired
+  t-test). Compare in addition if the performance of your models are
+  better than simply predicting the output to be the average of the
+  training data output.
+\end{enumerate}
+
+Test images from Dmitriy are depicted on Fig.~\ref{fig:test}.
+\begin{figure}
+  \begin{minipage}{0.49\textwidth}
+    \includegraphics[width = 0.99\textwidth]{download.jpg}
+  \end{minipage} \hfill
+  \begin{minipage}{0.49\textwidth}
+    \includegraphics[width = 0.99\textwidth]{webmd_rf_photo_of_liver_and_hepatitis_virus.jpg}
+  \end{minipage} \vfill
+  \caption{Test figures of Hepatitis from Dmitriy.}
+  \label{fig:test}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%% Classification %%%%%%%%%%%%%%%%%%%%
+\section{Classification}
+\label{sec:classification}
+\begin{enumerate}
+\item Explain which classification problem you have chosen to solve.
+\item Apply at least three of the following methods: Decision Trees
+  (as in Fig.~\ref{fig:decision_tree}), Logistic/Multinomial
+  Regression (as in Lst.~\ref{lst:logistic_regression}), K-Nearest
+  Neighbors (KNN), Naı̈ve Bayes and Artificial Neural Networks (ANN).
+  (Use cross-validation to select relevant parameters in an inner
+  cross-validation loop and give in a table the performance results
+  for the methods evaluated on the same cross-validation splits on the
+  outer cross-validation loop, i.e. you should use two levels of
+  cross-validation).
+\item For the models you are able to interpret explain how a new data
+  observation is classified.  (If you have multiple models fitted,
+  (i.e., one for each cross-validation split) either focus on one of
+  these fitted models or consider fitting one model for the optimal
+  setting of the parameters estimated by cross-validation to all the
+  data.)
+\item Statistically compare the performance of the two best performing
+  models (i.e., use a paired t-test). Compare in addition if the
+  performance of your models are better than simply predicting all
+  outputs to be the largest class in the training data.
+\end{enumerate}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width = 0.99\textwidth]{decision_tree.pdf}
+  \caption{Decision tree for hepatitis dataset.}
+  \label{fig:decision_tree}
+\end{figure}
+
+\begin{lstlisting}[label = lst:logistic_regression, caption = {Results of logistic regression}]
+  Call:
+glm(formula = Class ~ Malaise + Ascites + Bilirubin + Histology, 
+    family = binomial(link = logit), data = data)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-2.7029   0.2382   0.2888   0.4330   1.8019  
+
+Coefficients:
+            Estimate Std. Error z value Pr(>|z|)   
+(Intercept)   1.2874     0.8407   1.531  0.12567   
+Malaise       0.9020     0.5670   1.591  0.11162   
+Ascites       1.9074     0.6621   2.881  0.00397 **
+Bilirubin    -0.7838     0.2613  -3.000  0.00270 **
+Histology    -0.9933     0.6132  -1.620  0.10529   
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 145.117  on 144  degrees of freedom
+Residual deviance:  91.903  on 140  degrees of freedom
+  (10 observations deleted due to missingness)
+AIC: 101.9
+
+Number of Fisher Scoring iterations: 5
+\end{lstlisting}
+%%%%%%%%%%%%%%%%%%%% Results and Discussion %%%%%%%%%%%%%%%%%%%%
+\section{Results and Discussion}
+\label{sec:results_and_discussion}
+If your data has previously been analyzed by regression or
+classification in the lit- erature, please report what methods have
+been used previously as well as their performance and relate your
+results to these previous results.
+
+Notice, if the analysis of your data is too computationally demanding
+for choosing parameters in the inner cross-validation loop we suggest
+you use the hold-out method instead of K-fold
+cross-validation. Furthermore, if analyzing the data by ANN is too
+computationally demanding you can consider only analyzing a subset of
+your data by ANN.
+
+The report should be 5-10 pages long including figures and tables and
+give a precise and coherent account of the results of the regression
+and classification methods applied to your data. Please hand in the
+report by uploading it as a single, uncompressed .pdf file to
+CampusNet no later than {\bf 12 April at 13:00}.  To ensure all group
+members get credit for the report, put your names and study numbers on
+the front page and ensure you upload the report as a group hand in and
+put the name of your dataset on the front page.
+%%%%%%%%%%%%%%%%%%%% Bibliography %%%%%%%%%%%%%%%%%%%%
+\begin{thebibliography}{99}
+\bibitem{annas-url-1}
+  \url{http://archive.ics.uci.edu/ml/machine-learning-databases/hepatitis/}
+\bibitem{jenses-url-1}
+  \url{http://emedicine.medscape.com/article/2054430-overview#a1}
+\bibitem{jenses-url-2}
+  \url{https://www.sundhed.dk/sundhedsfaglig/laegehaandbogen/undersoegelser-og-proever/klinisk-biokemi/blodproever/bilirubin-total/}
+\bibitem{diaconis-computer-1983} P.~Diaconis, and B.~Efron,
+  ``Computer-Intensive Methods in Statistics,'' Scientific American,
+  V. {\bf 248}, 1983.
+\end{thebibliography}
+\end{document}

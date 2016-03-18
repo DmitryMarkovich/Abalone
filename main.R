@@ -13,7 +13,7 @@ source("src/data_loading_functions.R");  ## loads data loading functions
 
 ######################################## Main part
 ########### Plotting / summarizing raw data ##########
-data <- LoadData(binarize = TRUE);
+data <- LoadData(binarize = FALSE);
 ########### PCA Analysis ##########
 ##data1 <- LoadData(fact = FALSE, na.rm = TRUE);  ## loads data for PCA
 ## SVD <- GetSVD(); P <- MakePCAProjection(SVD);

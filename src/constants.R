@@ -15,6 +15,9 @@ kAttributeLevels <- list(
 
 kClassColors <- c("black", "red", "green");
 
+kAttributeImportance <- c("Sex", "Length", "Height", "WhlWght", "ShllWght",
+                          "VscrWght", "Diameter", "ShckdWght");
+
 kAttributeNamesPCA <- c("Age", "Steroid", "Antivirals", "Fatigue",
                         "Malaise", "Anorexia", "LiverBig", "LiverFirm",
                         "SpleenPalpable", "Spiders", "Ascites", "Varices",

@@ -12,6 +12,7 @@ LoadData <- function(binarize = TRUE) {
             data$Infant <- as.integer(data$Sex == "I");
             data$Sex <- NULL;
         }
+        data$Age <- 1.5 + data$Rings;
         return(data);
     } else {
         warning(paste0(">> ", kDataFname,  " was not found, returning NULL!"));

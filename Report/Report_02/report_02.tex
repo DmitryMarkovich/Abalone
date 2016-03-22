@@ -18,7 +18,7 @@
 %%%%%%%%%%%%%%%%%%%% Title page %%%%%%%%%%%%%%%%%%%%
 \title{Report 02}
 
-\author{ Dmitriy Markovich, Julian Lemos Vinasco}
+\author{Dmitriy Markovich, Julian Lemos Vinasco}
 
 \date{}
 
@@ -104,10 +104,10 @@ of abalones using their measured physical characteristics.  Age in
 years as an attribute can be calculated from the Rings attribute as
 Age = 1.5 + Rings.  Age range may be obtained from the Age attributes
 by splitting it into a number of groups.  Grouping can be done in a
-variety of ways, but it is wise to group the data in a way that the
-number of counts in each group is at least on the same scale.  The
-distribution of Age attribute and its splitting into 5 groups is
-presented in Fig.~\ref{fig:age_grouping}.
+variety of ways, but it is statistically wise to group the data in a
+way that the number of counts in each group is at least on the same
+scale with the others.  The distribution of Age attribute and its
+splitting into 5 groups is presented in Fig.~\ref{fig:age_grouping}.
 
 \begin{figure}[htbp]
   \centering
@@ -117,47 +117,111 @@ presented in Fig.~\ref{fig:age_grouping}.
 \end{figure}
 
 Each of the groups in Fig.~\ref{fig:age_grouping} represents a certain
-class, that the Age attribute belongs to.  So we can proceed with
-predicting the age range or the class of age using other attributes.
-The results of applyig a decision tree method are presented in
-Fig.~\ref{fig:decision_tree}.
+class, that the continuous Age attribute belongs to.  So we can
+proceed with predicting the age range or the class of Age using other
+attributes with the help of various classification methods.
 
+\subsection{Decision trees}
+Decision tree is a tool that uses a tree-like model of decisions and
+their possible consequences.  The goal is to find out how on the basis
+of all other attributes to classify the age according to splitting in
+Fig.~\ref{fig:age_grouping}.  To visualize the idea, the result of
+fitting a decision tree to the whole dataset is presented in
+Fig.~\ref{fig:decision_tree}.  Pruning level was set to 0.01, minimum
+number of observations in the node to attempt splitting --- to 5.
+Basically, the tree shows that only two attributes are required to
+classify the Age --- ShllWght and ShckdWght.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width = 0.99\textwidth]{decision_tree.pdf}
-  \caption{Decision tree for the class of Age attribute.}
+  \includegraphics[width = 0.49\textwidth]{decision_tree.pdf}
+  \caption{Decision tree fitted to the whole dataset.  Pruning level
+    was set to 0.01, minimum number of observations in the node to
+    attempt splitting --- to 5.}
   \label{fig:decision_tree}
 \end{figure}
 
-%% \begin{lstlisting}[label = lst:logistic_regression, caption = {Results of logistic regression}]
-%%   Call:
-%% glm(formula = Class ~ Malaise + Ascites + Bilirubin + Histology, 
-%%     family = binomial(link = logit), data = data)
+The tree in Fig.~\ref{fig:decision_tree} was fitted to the whole
+dataset, and there is no way to validate the model.  In practice,
+model selecion and performance evaluation of a decision tree are
+achieved by two layer cross-validation, where at the outer level the
+performance of the optimal model is evaluated and on the inner level
+the optimal model is selected.
 
-%% Deviance Residuals: 
-%%     Min       1Q   Median       3Q      Max  
-%% -2.7029   0.2382   0.2888   0.4330   1.8019  
+The complexity of the decision tree model is defined by its pruning
+level.  Generally, a full decision tree with pruning level zero turns
+to overfitting --- it has a very low error rate on the training
+dataset, but a very large error on the test dataset.  Adjusting the
+pruning level with one layer K-fold cross-validation gives the optimal
+pruning level.  The result of applying one layer 10-fold
+cross-validation to the data is presented in Fig.~\ref{fig:cv_1}.
+Minimum number of observations in the node to attempt splitting was
+set to 5.  The optimal pruning level is 0.0026 and the error rate is
+47.7 \%.
 
-%% Coefficients:
-%%             Estimate Std. Error z value Pr(>|z|)   
-%% (Intercept)   1.2874     0.8407   1.531  0.12567   
-%% Malaise       0.9020     0.5670   1.591  0.11162   
-%% Ascites       1.9074     0.6621   2.881  0.00397 **
-%% Bilirubin    -0.7838     0.2613  -3.000  0.00270 **
-%% Histology    -0.9933     0.6132  -1.620  0.10529   
-%% ---
-%% Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width = 0.49\textwidth]{decision_tree_err_CV1.pdf}
+  \caption{One layer 10-fold cross-validation applied to the
+    dataset. Minimum number of observations in the node to attempt
+    splitting was set to 5.  The optimal pruning level is 0.0026 and
+    the error rate is 47.7 \%.}
+  \label{fig:cv_1}
+\end{figure}
 
-%% (Dispersion parameter for binomial family taken to be 1)
+Now this approach can be expanded to two layer cross-validation. In
+the inner cross-validation loop the complexity parameter will be
+selected and on the outer loop the performance of the best model will
+be evaluated.  The procedure will produce information like this
 
-%%     Null deviance: 145.117  on 144  degrees of freedom
-%% Residual deviance:  91.903  on 140  degrees of freedom
-%%   (10 observations deleted due to missingness)
-%% AIC: 101.9
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width = 0.49\textwidth]{decision_tree_err_CV2.pdf}
+  \caption{Two layer 10-by-10 cross-validation applied to the
+    dataset. Minimum number of observations in the node to attempt
+    splitting was set to 5.  The error rate is 47.8 \%.}
+  \label{fig:cv_2}
+\end{figure}
 
-%% Number of Fisher Scoring iterations: 5
-%% \end{lstlisting}
+\subsection{K nearest neighbours}
+
+Nearest neighbor classifier computes the distance to all data objects,
+finds the nearest k data objects, and classifies according to the
+majority of votes.  The basic application of the method is visualized
+in Fig.~\ref{fig:knn_cv1}.  The optimal number of nearest neighbours
+estimated by one layer 10-fold cross-validation is 23.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width = 0.49\textwidth]{k_nearest_neighbours_err_CV1.pdf}
+  \caption{One layer 10-fold cross-validation applied to the dataset.
+    The optimal number of neighbours is 23 and the error rate is 50.01
+    \%.}
+  \label{fig:knn_cv_1}
+\end{figure}
+
+K nearest neighbor method applied in a two layer cross-validation loop
+is presented in Fig.~\ref{fig:cv_2}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width = 0.49\textwidth]{k_nearest_neighbours_err_CV2.pdf}
+  \caption{Two layer 10-by-10 cross-validation applied to the
+    dataset. The error rate is 49.25 \%}
+  \label{fig:knn_cv_2}
+\end{figure}
+
+
+\subsection{Naive Bayes}
+
+Naive bayes classifier gives the error rate of 54.41 \% with 10-fold
+cross-validation.
+
+There are two important aspects of classification and regression
+methods, how well the methods can predict unlabeled data and how well
+the method describe what aspects in the data causes the data to be
+classified a certain way.
+
 
 %%%%%%%%%%%%%%%%%%%% Results and Discussion %%%%%%%%%%%%%%%%%%%%
 \section{Results and Discussion}
@@ -192,3 +256,32 @@ put the name of your dataset on the front page.
     University of Wisconsin-Madison, 2010.
 \end{thebibliography}
 \end{document}
+
+%% \begin{lstlisting}[label = lst:logistic_regression, caption = {Results of logistic regression}]
+%%   Call:
+%% glm(formula = Class ~ Malaise + Ascites + Bilirubin + Histology, 
+%%     family = binomial(link = logit), data = data)
+
+%% Deviance Residuals: 
+%%     Min       1Q   Median       3Q      Max  
+%% -2.7029   0.2382   0.2888   0.4330   1.8019  
+
+%% Coefficients:
+%%             Estimate Std. Error z value Pr(>|z|)   
+%% (Intercept)   1.2874     0.8407   1.531  0.12567   
+%% Malaise       0.9020     0.5670   1.591  0.11162   
+%% Ascites       1.9074     0.6621   2.881  0.00397 **
+%% Bilirubin    -0.7838     0.2613  -3.000  0.00270 **
+%% Histology    -0.9933     0.6132  -1.620  0.10529   
+%% ---
+%% Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+%% (Dispersion parameter for binomial family taken to be 1)
+
+%%     Null deviance: 145.117  on 144  degrees of freedom
+%% Residual deviance:  91.903  on 140  degrees of freedom
+%%   (10 observations deleted due to missingness)
+%% AIC: 101.9
+
+%% Number of Fisher Scoring iterations: 5
+%% \end{lstlisting}

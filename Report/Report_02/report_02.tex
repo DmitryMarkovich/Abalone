@@ -35,30 +35,19 @@
 %%%%%%%%%%%%%%%%%%%% Introduction %%%%%%%%%%%%%%%%%%%%
 \section{Regression}
 \label{sec:regression}
-In this section of the report you are to solve a relevant regression
-problem for your data. In particular, you should:
-\begin{enumerate}
-\item Explain which regression problem you have chosen to solve.
-\item Apply linear regression with forward selection and consider if
-  transforming or combining attributes potentially may be useful. For
-  linear regression, plotting the residual error vs. the attributes
-  can give some insight into whether in- cluding a transformation of a
-  variable can improve the model, i.e. potentially describe parts of
-  the residuals.
-\item Explain how a new data observation is predicted according to the
-  estimated model. I.e. what are the effects of the selected
-  attributes in terms of predicting the data.  (Notice, if you
-  interpret the magnitude of the estimated coefficients this in
-  general requires that each attribute be normalized prior to the
-  analysis).
-\item Fit an artificial neural network (ANN) model to the data.
-\item Statistically evaluate if there is a significant performance
-  difference between the fitted ANN and linear regression models based
-  on the same cross-validation splits (i.e., use a paired
-  t-test). Compare in addition if the performance of your models are
-  better than simply predicting the output to be the average of the
-  training data output.
-\end{enumerate}
+
+\subsection{Problem description}
+The linear regression objective is to predict the Abalon's age based on 9 given attributes. The attributes considered for linear regression (LR) are presented next: Sex, Length, Diameter, Height, Whole weight (WhlWght), Shucked weight (ShckdWght), Viscera weight (VscrWght) and Shell weight (ShllWght). More details about the data set can be seen in \cite{datadescription}.
+
+\subsection{Linear Regression with forward selection}
+Prior to the LR the relation between the dependent variable Age and the independent attibutes were explored by a generalized additive model. Fig.~\ref{fig:gam} shows 
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width = 0.99\textwidth]{gam.pdf}
+  \caption{Attributes relation with Age}
+  \label{fig:gam}
+\end{figure}
 
 %% Test images from Dmitriy are depicted on Fig.~\ref{fig:test}.
 %% \begin{figure}
@@ -184,11 +173,13 @@ the front page and ensure you upload the report as a group hand in and
 put the name of your dataset on the front page.
 %%%%%%%%%%%%%%%%%%%% Bibliography %%%%%%%%%%%%%%%%%%%%
 \begin{thebibliography}{99}
-\bibitem{Waugh.thesis} S.~Waugh,''Extending and Benchmark
-  Cascade-Correlation,'' Thesis, 1997.
-  \bibitem{Mayukh} H.~Mayukh, ``Age of Abalones using Physical
+	\bibitem{Waugh.thesis} S.~Waugh,''Extending and Benchmark
+  	Cascade-Correlation,'' Thesis, 1997.
+	\bibitem{Mayukh} H.~Mayukh, ``Age of Abalones using Physical
     Characteristics: A Classification Problem,'' ECE 539 Fall 2010
     Project Report, Department of Electrical and Computer Engineering
     University of Wisconsin-Madison, 2010.
+    \bibitem{datadescription} \url{http://archive.ics.uci.edu/ml/datasets/Abalone}
+    
 \end{thebibliography}
 \end{document}

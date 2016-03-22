@@ -9,6 +9,9 @@ source("src/plotting_functions.R");  ## loads various plotting functions
 ## source("src/pca_functions.R");  ## loads pca functions
 source("src/decision_trees_functions.R");  ## loads functions for decision trees
 source("src/logistic_regression_functions.R");  ## loads functions for logistic regression
+source('src/bmplot.R') # Used with the forward selection function
+source('src/is.scalar.R') # Used with the forward selection function
+source('src/forwardSelection.R') # Forward selection function
 ######################################## Main part
 ########### Plotting / summarizing raw data ##########
 ## data <- LoadData(binarize = FALSE);

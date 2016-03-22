@@ -12,6 +12,9 @@ source("src/logistic_regression_functions.R");  ## loads functions for logistic 
 source("src/k_nearest_neighbours_functions.R");  ## loads functions for nearest neighbours
 source("src/naive_bayes_functions.R");  ## loads functions for naive bayes
 ################################################################################
+source('src/bmplot.R') # Used with the forward selection function
+source('src/is.scalar.R') # Used with the forward selection function
+source('src/forwardSelection.R') # Forward selection function
 ######################################## Main part
 ########### Plotting / summarizing raw data
 ## data <- LoadData(binarize = FALSE);

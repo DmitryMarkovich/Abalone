@@ -13,6 +13,7 @@ library(mgcv); ##   library for Generalized additive models
 library(Hmisc);  ## library for cut2 function to split into groups
 library(cvTools);  ## library for cross-validation
 library(FNN);  ## library for k nearest neighbours
+
 #################### Legacy packages
 ## library(caret) ##
 ## library(knitr);  ## report creation package

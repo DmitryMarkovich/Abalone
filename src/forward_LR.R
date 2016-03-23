@@ -20,7 +20,7 @@ par(mfrow=c(1,1))
 ## checkig normality with a simple linear regression
 lm1<- lm( (Age)~(Sex+Length+I(Length^2)+Diameter+Height+WhlWght+I(WhlWght^2)+ShckdWght+I(ShckdWght^2)+ShllWght), data = dat )
 # Check Cook's distance and normality assumptions
-par(mfrow=c(1,2))
+par(mfrow=c(2,1))
 plot(lm1, which=c(1,4))
 par(mfrow=c(1,1))
 # Removing observation 2052 according to Cook's distance
@@ -62,7 +62,7 @@ X$ShckdWght.2<- (dat1$ShckdWght)^2
 attributeNames<- colnames(X)
 y<- log(dat1$Age)
 M<- dim(X)[2]
-K<- 4 # folds in the cross validation outer level
+K<- 1 # folds in the cross validation outer level
 CV <- cvFolds(N, K=K)
 
 # set up vectors that will store sizes of training and test sizes
@@ -123,5 +123,4 @@ print(paste('- Test error:', sum(Error_test_fs)/sum(CV$TestSize)));
 #dev.off()
 par(mfrow=c(1,1))
 bmplot(attributeNames, 1:K, Features, xlab='Crossvalidation fold', ylab='', main='Attributes selected')
-
 

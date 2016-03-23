@@ -37,29 +37,81 @@
 \label{sec:regression}
 
 \subsection{Problem description}
-The linear regression objective is to predict the Abalon's age based on 9 given attributes. The attributes considered for linear regression (LR) are presented next: Sex, Length, Diameter, Height, Whole weight (WhlWght), Shucked weight (ShckdWght), Viscera weight (VscrWght) and Shell weight (ShllWght). More details about the data set can be seen in \cite{datadescription}.
+The linear regression objective is to predict the Abalon's age based on 9 given attributes. The attributes considered for Linear Regression (LR) are presented next: Sex, Length, Diameter, Height, Whole weight (WhlWght), Shucked weight (ShckdWght), Viscera weight (VscrWght) and Shell weight (ShllWght). More details about the data set can be seen in \cite{datadescription}.
 
 \subsection{Linear Regression with forward selection}
-Prior to the LR the relation between the dependent variable Age and the independent attibutes were explored by a generalized additive model. Fig.~\ref{fig:gam} shows 
+Prior to the LR, the relation between the dependent variable Age and the independent attibutes was explored by a generalized additive model. Fig.~\ref{fig:gam} shows that the attributes Length, WhlWght and ShckdWght do not have a liner relation with Age. The grahps suggest that exponential terms of this attributes are needed.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width = 0.99\textwidth]{gam.pdf}
-  \caption{Attributes relation with Age}
+  \includegraphics[width = 0.60\textwidth]{gam.pdf}
+  \caption{Attributes relation with Age.}
   \label{fig:gam}
 \end{figure}
 
-%% Test images from Dmitriy are depicted on Fig.~\ref{fig:test}.
-%% \begin{figure}
-%%   \begin{minipage}{0.49\textwidth}
-%%     \includegraphics[width = 0.99\textwidth]{download.jpg}
-%%   \end{minipage} \hfill
-%%   \begin{minipage}{0.49\textwidth}
-%%     \includegraphics[width = 0.99\textwidth]{webmd_rf_photo_of_liver_and_hepatitis_virus.jpg}
-%%   \end{minipage} \vfill
-%%   \caption{Test figures of Hepatitis from Dmitriy.}
-%%   \label{fig:test}
-%% \end{figure}
+Additionally, an initial LR model was implemented in order to check the model's assumptions. Fig.~\ref{fig:modelcheck} shows a clearly trompet shape suggesting the need for a logaritmic transformation of the response variable Age. Additionally, from the cook's distance it is clearly that observation 2052 corresponds to and outlier and it will be removed from the data.
+
+\newpage
+\begin{figure}[h]
+  \centering
+  \includegraphics[width = 0.49\textwidth]{modelcheck.pdf}
+  \caption{Initial LR normality.}
+  \label{fig:modelcheck}
+\end{figure}
+
+The forward slection with 10-fold cross-validation to perform sequential feature selection was implemented considering previous analysis. Fig.~\ref{fig:forwardselection} shows Squared error and the attributes selected in each iteration. From the plots it is clear that the model used in iteration 10 is the one with less error.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width = 0.49\textwidth]{forwardselection.pdf}
+  \caption{Forward selection results.}
+  \label{fig:forwardselection}
+\end{figure}
+
+\subsection{Model Interpretation}
+The model formulation found in the previous section is presented next:\\
+
+$log(Age)= (Sex + Length + Length^2 + Diameter +Height + WhlWght + WhlWght^2 + ShckdWght + ShckdWght^2 +ShllWght)$\\
+
+Furthermore, the model's coefficients can be seen in Tab.~\ref{tab:modelcoefficients}. The Age base line is described by the intercept. Then, the positive coefficients in the attributes Sex-Maculine, Length, Diameter, Height, WhlWght, ShckdWght$^2$ and ShllWght indicated that the Age is expected to be higher if the values of this attributes increase. On the other hand, the negative coefficients for Sex-Infant, Length$^2$, WhlWght$^2$ indicated a reduction in the expected Age. Notice that the negative coefficients in the squared attributes represent a correction in the linear attributes. This is due to Age presents a non linear relation with this terms.
+
+\newpage
+\begin{table}[ht]
+\centering
+\begin{tabular}{rr}
+  \hline
+ Attributes & Coefficients \\ 
+  \hline
+  Intercept & 1.177 \\ 
+  Sex-Infant & -0.060 \\ 
+  Sex-Masculine & 0.004 \\ 
+  Length & 3.274 \\ 
+  Length$^2$ & -3.507 \\ 
+  Diameter & 0.601 \\ 
+  Height & 0.843 \\ 
+  WhlWght & 1.186 \\ 
+  WhlWght$^2$ & -0.265 \\ 
+  ShckdWght & -2.839 \\ 
+  ShckdWght$^2$ & 1.379 \\ 
+  ShllWght & 0.889 \\ 
+   \hline
+\end{tabular}
+\caption{Model coefficients}
+\label{tab:modelcoefficients}
+\end{table}
+
+Finally, Fig.~\ref{fig:finalmodelcheck} shows the final model assumptions check. From the Residuals vs Fitted plot it can be seen a pattern in the residuals. Additionally, the Normal Q-Q plot shows what seems to be a deviation from normality.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width = 0.99\textwidth]{finalmodelcheck.pdf}
+  \caption{Final model assumptions check.}
+  \label{fig:finalmodelcheck}
+\end{figure}
+
+\subsection{Artificial Neural Network}
+
+\subsection{Model Comparison}
 %%%%%%%%%%%%%%%%%%%% Classification %%%%%%%%%%%%%%%%%%%%
 \section{Classification}
 \label{sec:classification}

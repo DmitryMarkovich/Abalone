@@ -1,4 +1,3 @@
-
 # -------------------- Preliminary analysis section -------------------------
 
 ### Exploring variables relation ###
@@ -18,7 +17,7 @@ plot(lm)
 par(mfrow=c(1,1))
 
 ## checkig normality with a simple linear regression
-lm1<- lm( (Age)~(Sex+Length+I(Length^2)+Diameter+Height+WhlWght+I(WhlWght^2)+ShckdWght+I(ShckdWght^2)+ShllWght), data = dat )
+lm1 <- lm( (Age)~(Sex+Length+I(Length^2)+Diameter+Height+WhlWght+I(WhlWght^2)+ShckdWght+I(ShckdWght^2)+ShllWght), data = dat )
 # Check Cook's distance and normality assumptions
 par(mfrow=c(2,1))
 plot(lm1, which=c(1,4))
@@ -77,7 +76,7 @@ Error_train_fs <- matrix(rep(NA, times=K), nrow=K)
 Error_test_fs <- matrix(rep(NA, times=K), nrow=K)
 
 ## For each crossvalidation fold (outer cross validation loop)
-for(k in 1:K){
+for(k in 1:K) {
   paste('Crossvalidation fold ', k, '/', K, sep='')
   
   # Extract the training and test set

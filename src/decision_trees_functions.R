@@ -1,7 +1,11 @@
 ################################################################################
-MakeDecisionTree <- function(N.groups = 5, cp = 0, minsplit = 10) {
+MakeDecisionTree <- function(N.groups = 5, cp = 0, minsplit = 10, cut = 1) {
     data <- LoadData(binarize = FALSE); data$Rings <- NULL;
-    data$Class <- cut2(data$Age, g = N.groups); data$Age <- NULL;
+    if (cut == 1) {
+        data$Class <- cut(data$Age, breaks = N.groups); data$Age <- NULL;
+    } else if (cut == 2) {
+        data$Class <- cut2(data$Age, g = N.groups); data$Age <- NULL;
+    }
     str(data);
     fmla <- as.formula(c("Class ~ ",
                          paste0(kAttributeNames[kAttributeNames != "Rings"],
@@ -37,7 +41,8 @@ MakeDecisionTree <- function(N.groups = 5, cp = 0, minsplit = 10) {
 FindOptCPwCV1 <- function(N.groups = 5, K = 10, cp.max = 0.05, cp.N = 10,
                           minsplit = 10) {
     data <- LoadData(binarize = FALSE); data$Rings <- NULL;
-    data$Class <- cut2(data$Age, g = N.groups);  data$Age <- NULL;  # str(data);
+    ## data$Class <- cut2(data$Age, g = N.groups);  data$Age <- NULL;  # str(data);
+    data$Class <- cut(data$Age, breaks = N.groups);  data$Age <- NULL;  # str(data);
     fmla <- as.formula(c("Class ~ ",
                          paste0(kAttributeNames[kAttributeNames != "Rings"],
                                 collapse = " + ")));  ## print(fmla);
@@ -107,10 +112,17 @@ FindOptCPwCV1 <- function(N.groups = 5, K = 10, cp.max = 0.05, cp.N = 10,
 
 ################################################################################
 FindOptCPwCV2 <- function(N.groups = 5, K1 = 5, K2 = 10, cp.max = 0.05, cp.N = 10,
-                          minsplit = 10) {
+                          minsplit = 10, cut = 1) {
     print(paste0(">> Starting CV2 with K1 = ", K1, ", K2 = ", K2, ", cp.N = ", cp.N));
     data <- LoadData(binarize = FALSE); data$Rings <- NULL;
-    data$Class <- cut2(data$Age, g = N.groups);  data$Age <- NULL;  # str(data);
+    if (cut == 1) {
+        data$Class <- cut(data$Age, breaks = N.groups);  data$Age <- NULL;  # str(data);
+    } else if (cut == 2) {
+        data$Class <- cut2(data$Age, g = N.groups);  data$Age <- NULL;  # str(data);
+    } else {
+        stop("unknown cut value!");
+    }
+
     fmla <- as.formula(c("Class ~ ",
                          paste0(kAttributeNames[kAttributeNames != "Rings"],
                                 collapse = " + ")));  ## print(fmla);
@@ -129,10 +141,14 @@ FindOptCPwCV2 <- function(N.groups = 5, K1 = 5, K2 = 10, cp.max = 0.05, cp.N = 1
     Error.train.K1 = matrix(rep(NA, times = K1), nrow = K1);
     Error.test.K1 = matrix(rep(NA, times = K1), nrow = K1);
 
+    ## vectors to store cp.best and min.error.rate
+    cp.best.vec <- rep(NA, K1);
+    min.error.rate <- rep(NA, K1);
+
     ## par(mfrow = CalculatePlotLayout(K1));
-    pdf(file = paste0(project.path, "/output/decision_tree_err_CV2.pdf"),
-        width = 12, height = 9, bg = "white");
-    par(mfrow = c(2, 5));
+    ## pdf(file = paste0(project.path, "/output/decision_tree_err_CV2.pdf"),
+    ##     width = 1 * 12, height = 1 * 9, bg = "white");
+    ## par(mfrow = c(2, 5));
     for (k1 in 1:K1) {  ## K1-fold splitting OUTER loop
         print(paste0(">> OUTER ", k1, " of ", K1));
         ## Extract training and test set
@@ -198,17 +214,21 @@ FindOptCPwCV2 <- function(N.groups = 5, K1 = 5, K2 = 10, cp.max = 0.05, cp.N = 1
         Err.Test.K2 <- 100 * colSums(Error.test.K2) / sum(CV.K2$TestSize);
         ## print(Err.Train.K2);
         ## print(Err.Test.K2);
-        cp.best <- cp.vec[Err.Test.K2 == min(Err.Test.K2)];
-        print(paste0(">> min(Err.Test.K2) = ", min(Err.Test.K2), " at cp.best = ", cp.best));
 
-        plot(cp.vec, Err.Train.K2, col = "blue", pch = 16, type = "b",
-             xlab = "cp", ylab = "Error rate, %", las = 1, cex.lab = 2,
-             cex.axis = 2, cex.main = 2, cex = 1.5,
-             ylim = c(min(Err.Train.K2), max(Err.Test.K2)),
-             main = paste0("k1 = ", k1, " of ", K1));
-        lines(cp.vec, Err.Test.K2, col = "red", pch = 16, type = "b", cex = 1.5);
-        abline(v = cp.best, lwd = 1, lty = 3, col = "red");
-        abline(h = min(Err.Test.K2), lwd = 1, lty = 3, col = "red");
+        min.err <- min(Err.Test.K2)[1];
+        cp.best <- cp.vec[Err.Test.K2 == min.err][1];
+        print(paste0(">> min(Err.Test.K2) = ", min.err, " at cp.best = ", cp.best));
+        cp.best.vec[k1] <- cp.best;
+        min.error.rate[k1] <- min.err;
+
+        ## plot(cp.vec, Err.Train.K2, col = "blue", pch = 16, type = "b",
+        ##      xlab = "cp", ylab = "Error rate, %", las = 1, cex.lab = 2,
+        ##      cex.axis = 2, cex.main = 2, cex = 1.5,
+        ##      ylim = c(min(Err.Train.K2), max(Err.Test.K2)),
+        ##      main = paste0("k1 = ", k1, " of ", K1));
+        ## lines(cp.vec, Err.Test.K2, col = "red", pch = 16, type = "b", cex = 1.5);
+        ## abline(v = cp.best[1], lwd = 1, lty = 3, col = "red");
+        ## abline(h = min(Err.Test.K2)[1], lwd = 1, lty = 3, col = "red");
         ## Fit the decision tree to train data
         tree <- rpart(formula = fmla,
                       data = data.train.k1, method = "class",
@@ -231,17 +251,33 @@ FindOptCPwCV2 <- function(N.groups = 5, K1 = 5, K2 = 10, cp.max = 0.05, cp.N = 1
         pr.clss.train <- predict(tree, newdata = data.train.k1, type = "vector");
         pr.clss.test <- predict(tree, newdata = data.test.k1, type = "vector");
         Error.train.K1[k1] = sum(as.integer(pr.clss.train) != as.integer(data.train.k1$Class));
-        Error.test.K1[k1] = sum(as.integer(pr.clss.test) != as.integer(data.test.k1$Class));
+        Error.test.K1[k1] = 100 * sum(as.integer(pr.clss.test) != as.integer(data.test.k1$Class)) / length(data.test.k1$Class);
     }  ## End of for k1 in K1 OUTER loop
     ## print(paste0(">> Cross-validated errors:"));
     ## print(Error.train.K1);
     ## print(Error.test.K1);
-    print(paste0(">> Cross-validated error rates:"));
-    Err.Train.K1 <- 100 * colSums(Error.train.K1) / sum(CV.K1$TrainSize);
-    Err.Test.K1 <- 100 * colSums(Error.test.K1) / sum(CV.K1$TestSize);
-    print(Err.Train.K1);
-    print(Err.Test.K1);
-    dev.off();
+
+    ## plot(1:K1, cp.best.vec, col = "black", pch = 16, type = "b",
+    ##      xlab = "Outer loop split", ylab = NA, las = 1, cex.lab = 2,
+    ##      cex.axis = 2, cex.main = 2, cex = 1.5,
+    ##      ylim = c(min(Err.Train.K2), max(Err.Test.K2)),
+    ##      main = paste0("k1 = ", k1, " of ", K1));
+
+    ## print(paste0(">> Cross-validated error rates:"));
+    ## Err.Train.K1 <- 100 * colSums(Error.train.K1) / sum(CV.K1$TrainSize);
+    ## Err.Test.K1 <- 1 * colSums(Error.test.K1) / sum(CV.K1$TestSize);
+    ## print(Err.Train.K1);
+    ## print(Err.Test.K1);
+
+    return(list(
+        k1 = 1:K1,
+        cp.best = cp.best.vec,
+        ErrRate = Error.test.K1
+        ));
+    ## par(mfrow = c(1, 2));
+    ## plot(1:K1, Error.test.K1);
+    ## plot(1:K1, cp.best.vec);
+    ## dev.off();
     ## print(Error.train.K1 / CV.K1$TrainSize);
     ## print(Error.train.K2 / CV.K2$TrainSize);
     ## return(list(

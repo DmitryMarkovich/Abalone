@@ -13,7 +13,12 @@ library(mgcv); ##   library for Generalized additive models
 library(Hmisc);  ## library for cut2 function to split into groups
 library(cvTools);  ## library for cross-validation
 library(FNN);  ## library for k nearest neighbours
-
+library(nnet);  ## library for multinomial regression
+library(neuralnet);  ## library for ANN
+library(glmnet);
+library(dichromat);
+library(NeuralNetTools);
+## library(mlogit);
 #################### Legacy packages
 ## library(caret) ##
 ## library(knitr);  ## report creation package

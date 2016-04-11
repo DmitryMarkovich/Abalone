@@ -480,9 +480,9 @@ PlotClsfComparison1 <- function(res.comp) {
   axis(side = 1, lwd = 1, line = 0.0, cex.axis = 2.0);
   title(xlab = paste0("Number of cross-validation split"), line = 2.5, cex.lab = 2.0);
   axis(side = 2, lwd = 1, line = 0.0, cex.axis = 2.0, las = 1);
-  title(ylab = paste0("Error rate, %"), line = 4,
+  title(ylab = paste0("Residuals"), line = 4,
         cex.lab = 2.0, adj = NULL);
-  title(main = paste0("Classifier comparison with one-layer cross-validation"),
+  title(main = paste0("Models comparison with one-layer cross-validation"),
         line = 0.5, cex.main = 2);
   lines(res.comp$K1, res.comp$ANN, type = "b", cex = 1.5, col = 2, pch = 16);
   lines(res.comp$K1, res.comp$FLR, type = "b", cex = 1.5, col = 3, pch = 16);
@@ -499,6 +499,3 @@ PlotClsfComparison1 <- function(res.comp) {
   dev.off();
 }  ## End of PlotErrNN
 ################################################################################
-
-
-

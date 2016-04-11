@@ -29,12 +29,16 @@
   We solve the regression problem of predicting the age of abalones on
   the basis of its measured physical characteristics, as well as the
   similar classification problem of predicting the age of range of
-  abalones.  We consider linear regression, linear regression with
-  forward selection, decision trees (DT), k nearest neighbors (KNN),
-  naive bayes (NB), artificial neural networks (ANN), and multinomial
-  regression (MNMR) methods.  For classification problem, we found the
-  ANN and MNMR to be the best performing models, and showed them to
-  perform better than the largest class (Lcl) classifier and the linear regression models (LR) using the paired t-test.
+  abalones.  We consider linear regression (LR), linear regression
+  with forward selection (FLR), decision trees (DT), k nearest
+  neighbors (KNN), naive bayes (NB), artificial neural networks (ANN),
+  and multinomial regression (MNMR) methods.  For regression problem,
+  we found that the ANN model performs best, and the FLR and AVE
+  models are indistinguishable from each other.  For classification
+  problem, we found the ANN and MNMR to be the best performing models,
+  and showed them to perform better than the largest class (Lcl)
+  classifier and the linear regression models (LR) using the paired
+  t-test.
   %% Objective: The objective of this second report is to apply the
   %% methods you have learned in the second section of the course on
   %% ”Supervised learning: Classification and regression” in order to
@@ -48,133 +52,191 @@
 
 \subsection{Problem description}
 The linear regression objective is to predict the Abalon's age based
-on 9 given attributes. The attributes considered for Linear Regression
-(LR) are presented next: Sex, Length, Diameter, Height, Whole weight
-(WhlWght), Shucked weight (ShckdWght), Viscera weight (VscrWght) and
-Shell weight (ShllWght). More details about the data set can be seen
-in \cite{datadescription}.
+on 9 given attributes.  The attributes considered for Linear
+Regression (LR) are presented next: Sex, Length, Diameter, Height,
+Whole weight (WhlWght), Shucked weight (ShckdWght), Viscera weight
+(VscrWght) and Shell weight (ShllWght).  More details about the data
+set can be found in \cite{datadescription}.
 
 \subsection{Linear Regression with forward selection}
 Prior to the LR, the relation between the dependent variable Age and
 the independent attributes was explored by a generalized additive
-model. Fig.~\ref{fig:gam} shows that the attributes Length, WhlWght
-and ShckdWght do not have a liner relation with Age. The graphs
-suggest that exponential terms of this attributes are needed.
+model~\cite{gam}.  Fig.~\ref{fig:gam} shows that the attributes
+Length, WhlWght and ShckdWght do not have a linear relation with Age.
+The graphs suggest that exponential terms of this attributes are
+needed.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width = 0.60\textwidth]{gam.pdf}
-  \caption{Attributes relation with Age.}
+  \includegraphics[width = 0.75\textwidth]{gam.pdf}
+  \caption{Relation of attributes Length, Diameter, Height, WhlWght,
+    ShckdWght, and ShllWght with Age explored with the generalized
+    additive model.  Length, WhlWght and ShckdWght do not have a
+    linear relation with Age.}
   \label{fig:gam}
 \end{figure}
 
 Additionally, an initial LR model was implemented in order to check
-the model's assumptions. Fig.~\ref{fig:modelcheck} shows a clearly
-trumpet shape suggesting the need for a logarithmic transformation of
-the response variable Age. Additionally, from the cook's distance it
-is clearly that observation 2052 corresponds to and outlier and it
-will be removed from the data.
+the model's assumptions.  Fig.~\ref{fig:modelcheck}a clearly shows a
+trumpet shape that suggests the need for a logarithmic transformation
+of the response variable Age.  Additionally, it is clear from the
+Cook's distance that observation 2052 is an outlier and therefore is
+removed from the data.
 
-\newpage
 \begin{figure}[h]
-  \centering
-  \includegraphics[width = 0.49\textwidth]{modelcheck.pdf}
-  \caption{Initial LR normality.}
+  \begin{minipage}{0.3\textwidth}
+    a)\\
+    \includegraphics[width = 0.99\textwidth]{modelcheck.pdf}
+  \end{minipage} \hfill
+  \begin{minipage}{0.3\textwidth}
+    b)\\
+    \includegraphics[width = 0.99\textwidth]{forwardselection.pdf}
+  \end{minipage} \hfill
+  \begin{minipage}{0.3\textwidth}
+    c)\\
+    \includegraphics[width = 0.99\textwidth]{finalmodelcheck.pdf}
+  \end{minipage} \vfill
+  \begin{minipage}{0.99\textwidth}
+    d)\\
+    \begin{center}
+      \scriptsize
+      \begin{tabular}{c|c|c|c|c|c|c|c|c|c|c|c|c}
+      \toprule
+      Attribute & Intercept & SexI & SexM & Length & $Length^2$ & Diameter & Height &
+      WhlWght & $WhlWght^2$ & ShckdWght & $ShckdWght^2$ & ShllWght \\
+      \midrule
+      Coefficient & 0.252 & -0.027 & 0.002 & 1.781 & -1.8 & 0.271 & 0.358 &
+      0.444 & -0.097 & -1.138 & 0.568 & 0.338\\
+      \bottomrule
+    \end{tabular}
+    \end{center}
+  \end{minipage}
+  \caption{a) Initial LR model fitted to the data.  The trumpet shape
+    of residuals suggests a logarithmic transformation for the
+    variable Age.  The plot of Cook's distance shows that observation
+    2052 is an outlier.  b) Linear regression method with forward
+    selection fitted to data. The plot of squared error as the
+    function of iteration shows that the best model is the one at
+    iteration 10. The selected attributes at iteration 10 define the
+    model formula as described by Eq.~\ref{eq:model_formula}.  c)
+    Model check of Eq.~\ref{eq:model_formula} fitted to the data.
+    Normal Q-Q plot shows the deviation from normality.  d) The
+    coefficients of model in Eq.~\ref{eq:model_formula} fitted to
+    data.}
   \label{fig:modelcheck}
 \end{figure}
 
-The forward selection with 10-fold cross-validation to perform
+The forward selection (FLR) with 10-fold cross-validation to perform
 sequential feature selection was implemented considering previous
-analysis. Fig.~\ref{fig:forwardselection} shows Squared error and the
-attributes selected in each iteration. From the plots it is clear that
-the model used in iteration 10 is the one with less error.
-
-\begin{figure}[h]
-  \centering
-  \includegraphics[width = 0.49\textwidth]{forwardselection.pdf}
-  \caption{Forward selection results.}
-  \label{fig:forwardselection}
-\end{figure}
+analysis.  Fig.~\ref{fig:modelcheck}b shows the squared error and the
+attributes selected in each iteration.  The model obtained at
+iteration 10 has the lowest error and is therefore the best model
+produced by the method.
 
 \subsection{Model Interpretation}
-The model formulation found in the previous section is presented next:\\
+The formula of the best model in Fig.~\ref{fig:modelcheck}b reads:
+\begin{equation}
+  \log{(Age)} = Sex + Length + Length^2 + Diameter + Height + WhlWght + WhlWght^2 + ShckdWght + ShckdWght^2 + ShllWght
+  \label{eq:model_formula}
+\end{equation}
 
-$log(Age)= (Sex + Length + Length^2 + Diameter +Height + WhlWght + WhlWght^2 + ShckdWght + ShckdWght^2 +ShllWght)$\\
+The coefficients of the model can be found in
+Fig.~\ref{fig:modelcheck}c.  The Age base line is described by the
+intercept.  Then, the positive coefficients in the attributes SexM,
+Length, Diameter, Height, WhlWght, ShckdWght$^2$ and ShllWght
+indicated that the Age is expected to be higher if the values of this
+attributes increase.  On the other hand, the negative coefficients for
+SexI, Length$^2$, WhlWght$^2$ indicated a reduction in the expected
+Age.  Notice that the negative coefficients of the squared attributes
+represent a correction in the linear attributes.  This is due to the
+fact that Age is in a nonlinear relation with these terms.
 
-Furthermore, the model's coefficients can be seen in
-Tab.~\ref{tab:modelcoefficients}. The Age base line is described by
-the intercept. Then, the positive coefficients in the attributes
-Sex-Maculine, Length, Diameter, Height, WhlWght, ShckdWght$^2$ and
-ShllWght indicated that the Age is expected to be higher if the values
-of this attributes increase. On the other hand, the negative
-coefficients for Sex-Infant, Length$^2$, WhlWght$^2$ indicated a
-reduction in the expected Age. Notice that the negative coefficients
-in the squared attributes represent a correction in the linear
-attributes. This is due to Age presents a non linear relation with
-this terms.
+Eq.~\ref{eq:model_formula} model check is presented in
+Fig.~\ref{fig:modelcheck}c.  A pattern in the residuals can be clearly
+seen on the residuals plot, and the Normal Q-Q plot shows a deviation
+from normality.
 
-\newpage
-\begin{table}[ht]
-\centering
-\begin{tabular}{rrrrrrrrrrrrr}
-  \hline
- & (Intercept) & SexI & SexM & Length & $Length^2$ & Diameter \\ 
- \hline
- Coefficients & 0.252 & -0.027 & 0.002 & 1.781 & -1.800 & 0.271 \\
- \hline
- & Height & WhlWght & $WhlWght^2$ & ShckdWght & $ShckdWght^2$ & ShllWght \\ 
-  \hline
- Coefficients & 0.358 & 0.444 & -0.097 & -1.138 & 0.568 & 0.338 \\ 
-   \hline
-\end{tabular}
-\caption{Model coefficients}
-\label{tab:modelcoefficients}
-\end{table}
+%% \newpage
+%% \begin{table}[ht]
+%% \centering
+%% \begin{tabular}{rrrrrrrrrrrrr}
+%%   \hline
+%%  & (Intercept) & SexI & SexM & Length & $Length^2$ & Diameter \\ 
+%%  \hline
+%%  Coefficients & 0.252 & -0.027 & 0.002 & 1.781 & -1.800 & 0.271 \\
+%%  \hline
+%%  & Height & WhlWght & $WhlWght^2$ & ShckdWght & $ShckdWght^2$ & ShllWght \\ 
+%%   \hline
+%%  Coefficients & 0.358 & 0.444 & -0.097 & -1.138 & 0.568 & 0.338 \\ 
+%%    \hline
+%% \end{tabular}
+%% \caption{Model coefficients}
+%% \label{tab:modelcoefficients}
+%% \end{table}
 
-Finally, Fig.~\ref{fig:finalmodelcheck} shows the final model
-assumptions check. From the Residuals Vs Fitted plot it can be seen a
-pattern in the residuals. Additionally, the Normal Q-Q plot shows what
-seems to be a deviation from normality.
-
-\begin{figure}[h]
-  \centering
-  \includegraphics[width = 0.49\textwidth]{finalmodelcheck.pdf}
-  \caption{Final model assumptions check.}
-  \label{fig:finalmodelcheck}
-\end{figure}
+%% \begin{figure}[h]
+%%   \centering
+%%   \includegraphics[width = 0.49\textwidth]{finalmodelcheck.pdf}
+%%   \caption{Final model assumptions check.}
+%%   \label{fig:finalmodelcheck}
+%% \end{figure}
 
 \subsection{Artificial Neural Network}
-An Artificial Neural Network (ANN) was implemented to solve the regression problem. Age was managed like a continuous variable as function of the attributes. The ANN was implemented using $k=3$ cross-validation folds and 1 hidden unit. Fig.~\ref{fig:ann_lr} (a). shows the best of the three ANN fitted. Additionally, Fig.~\ref{fig:ann_lr} (b). shows the residuals error for each one of the cross-validation splits.
+An Artificial Neural Network (ANN) model to solve the regression
+problem is the following.  Age is a continuous variable, a function of
+all other attributes.  The ANN was implemented using $k=3$
+cross-validation folds and 1 hidden unit.  Fig.~\ref{fig:ann_lr}a
+shows the best of the three ANN fitted.  The residual error for each
+of the cross-validation splits is shown in Fig.~\ref{fig:ann_lr}b.
 
-It is important to mention that the ANN was fitted to considering a logarithmic transformation of the response variable. This was due to this transformation was made in the previous section and was important to have the same scale in both models in order to make a proper comparison.
+%% The ANN was fitted to considering a logarithmic transformation of the
+%% response variable.  This was due to this transformation was made in
+%% the previous section and was important to have the same scale in both
+%% models in order to make a proper comparison.
 
-\newpage
+%% \newpage
 \begin{figure}[h]
   \centering
-  \begin{minipage}{0.49\textwidth}
-  a)\\
-  \includegraphics[width = 0.99\textwidth]{ANN_LR.pdf}
-\end{minipage} \hfill
-	 \begin{minipage}{0.49\textwidth}
-  b)\\
-  \includegraphics[width = 0.99\textwidth]{ANN_LR_Error.pdf}
-\end{minipage} \vfill
-  \caption{ANN for the linear regression problem}
+  \begin{minipage}{0.3\textwidth}
+    a)\\
+    \includegraphics[width = 0.99\textwidth]{ANN_LR.pdf}
+  \end{minipage} \hfill
+  \begin{minipage}{0.3\textwidth}
+    b)\\
+    \includegraphics[width = 0.99\textwidth]{ANN_LR_Error.pdf}
+  \end{minipage} \hfill
+  \begin{minipage}{0.3\textwidth}
+    c)\\
+    \includegraphics[width = 0.99\textwidth]{Regression_comparison1.pdf}
+  \end{minipage} \vfill
+  \caption{a) Visualization of the ANN with one hidden unit fitted to
+    the data.  b) Residual error for each of the cross-validation
+    folds.  c) {\color{red} NEED FIXES FOR THE PLOT!} Performance
+    comparison of FLR, ANN, and average age (AVE) model.}
   \label{fig:ann_lr}
 \end{figure}
 
 
 \subsection{Models Comparison}
-The comparison of the models was made based Cross-validation approach with 3-folds for the ANN and the LR with forward selection models along with the error for the average of the training data output. Fig.~\ref{fig:lr_comparison} shows the comparison results. From the the plot it is clearly seen that the best method was the ANN having a lower error in each of the Cross-validation folds. Notice that the comparison of the models was made only with 3-folds, this was due to the ANN was highly computational demanding making the task difficult for a bigger number of folds.
+The comparison of the models was made using 3-fold cross-validation
+for the ANN and the LR with forward selection models along with the
+error for the average of the training data output.
+Fig.~\ref{fig:ann_lr}c shows the results of the comparison using the
+paired t-test.  From the the plot it is clearly seen that the best
+method was the ANN having a lower error in each of the
+cross-validation folds.  Notice that the comparison of the models was
+made only with 3-folds due to the fact that ANN was too computational
+demanding, making the job extremely time-consuming for a bigger number
+of folds.
 
-\begin{figure}[h]
-\centering
-\includegraphics[width = 0.49\textwidth]{Regression_comparison1.pdf}
-\caption{Error rate comparison between ANN, Average and LR with forward selection}
-\label{fig:lr_comparison}
-\end{figure}
+%% \begin{figure}[h]
+%% \centering
+%% \includegraphics[width = 0.49\textwidth]{Regression_comparison1.pdf}
+%% \caption{Error rate comparison between ANN, Average and LR with forward selection}
+%% \label{fig:lr_comparison}
+%% \end{figure}
 
-\clearpage
+%% \clearpage
 %%%%%%%%%%%%%%%%%%%% Classification %%%%%%%%%%%%%%%%%%%%
 \section{Classification}
 \label{sec:classification}
@@ -280,15 +342,17 @@ $cp = 0$.
   \centering
   \begin{minipage}{0.49\textwidth}
     a)\\
-    \includegraphics[width = 0.99\textwidth]{decision_tree_err_CV1.pdf}
+    \includegraphics[width = 0.9\textwidth]{decision_tree_err_CV1.pdf}
   \end{minipage} \hfill
   \begin{minipage}{0.49\textwidth}
     b)\\
-    \includegraphics[width = 0.99\textwidth]{decision_tree_CV2.pdf}
+    \includegraphics[width = 0.9\textwidth]{decision_tree_CV2.pdf}
   \end{minipage} \vfill
   \begin{minipage}{0.99\textwidth}
     c)\\
-    \includegraphics[width = 0.99\textwidth]{decision_tree.pdf}
+    \begin{center}
+      \includegraphics[width = 0.58\textwidth]{decision_tree.pdf}
+    \end{center}
   \end{minipage} \vfill
   \cprotect\caption{a) One-layer 10-fold cross-validation for decision
     tree model selection.  Minimum number of observations in the node
@@ -385,7 +449,7 @@ visualized in Fig.~\ref{fig:ANN}.
 
 \begin{figure}[h!]
   \centering
-  \begin{minipage}{0.75\textwidth}
+  \begin{minipage}{0.45\textwidth}
     \includegraphics[width = 0.99\textwidth]{ANN.png}
   \end{minipage} \vfill
   \caption{The visualization of the artificial neural network model
@@ -424,19 +488,19 @@ NB becomes effectively twice as large.
 \begin{figure}[h!]
   \begin{minipage}{0.49\textwidth}
     a)\\
-    \includegraphics[width = 0.99\textwidth]{k_nearest_neighbors_CV2.pdf}
+    \includegraphics[width = 0.9\textwidth]{k_nearest_neighbors_CV2.pdf}
   \end{minipage} \hfill
   \begin{minipage}{0.49\textwidth}
     b)\\
-    \includegraphics[width = 0.99\textwidth]{naive_bayes_CV1.pdf}
+    \includegraphics[width = 0.9\textwidth]{naive_bayes_CV1.pdf}
   \end{minipage} \vfill
   \begin{minipage}{0.49\textwidth}
     c)\\
-    \includegraphics[width = 0.99\textwidth]{artificial_neural_network_CV2.pdf}
+    \includegraphics[width = 0.9\textwidth]{artificial_neural_network_CV2.pdf}
   \end{minipage} \hfill
   \begin{minipage}{0.49\textwidth}
     d)\\
-    \includegraphics[width = 0.99\textwidth]{multinomial_regression_CV1.pdf}
+    \includegraphics[width = 0.9\textwidth]{multinomial_regression_CV1.pdf}
   \end{minipage} \vfill
   \begin{minipage}{0.49\textwidth}
     e) Equal length splitting using \verb|cut|\\
@@ -510,11 +574,11 @@ presented separately.
 \begin{figure}[h!]
   \begin{minipage}{0.49\textwidth}
     a) Equal length splitting using \verb|cut|\\
-    \includegraphics[width = 0.99\textwidth]{classifier_comparison_cut_1.pdf}
+    \includegraphics[width = 0.9\textwidth]{classifier_comparison_cut_1.pdf}
   \end{minipage} \hfill
   \begin{minipage}{0.49\textwidth}
     b) Group quantiles splitting using \verb|cut2|\\
-    \includegraphics[width = 0.99\textwidth]{classifier_comparison_cut_2.pdf}
+    \includegraphics[width = 0.9\textwidth]{classifier_comparison_cut_2.pdf}
   \end{minipage} \vfill
   \caption{The populations of the error rates of Lcl, ANN, and MNMR
     models are presented in Fig.~\ref{fig:comparison}.  In parenthesis
@@ -539,6 +603,16 @@ Fig.~\ref{fig:comparison}a.
 \section{Results and Discussion}
 \label{sec:results_and_discussion}
 
+Model checks of the considered FLR and ANN models show that the
+assumption of the normality of the residuals are not fully fullfilled.
+Therefore, a logarithmic transformation of the dependent variable was
+employed.  This approach is not recommended because of the
+difficulties in comparison of re-scaled and original models.
+Furthermore, model's coefficients interpretation should be treated
+with care because of the same fact.  Nevertheless, the performance
+comparison of the models shows that the ANN model performs best, and
+the FLR and AVE models are indistinguishable from each other.
+
 The considered classification problem for the dataset was to predict
 the age range of abalones using their measured physical
 characteristics.  We have investigated two possible strategies of
@@ -552,8 +626,6 @@ quantile splitting.  Statistical comparison of ANN and MNMR using the
 paired t-test showed that the classifiers are not significantly
 different from each other, but significantly different from the
 ``null'' largect class classifier.
-
-Results from the regression models shows difficulties in order to fulfill the normality assumptions. Thus, a logarithmic transformation of the dependent variable was needed. This approach is not recommended due to a data transformation could difficult the comparison between models because of the different scale of the data. Furthermore, model's coefficients interpretation should be manage with care because of the same fact.
 
 
 %% If your data has previously been analyzed by regression or
@@ -577,42 +649,14 @@ Results from the regression models shows difficulties in order to fulfill the no
 %% the front page and ensure you upload the report as a group hand in and
 %% put the name of your dataset on the front page.
 %%%%%%%%%%%%%%%%%%%% Bibliography %%%%%%%%%%%%%%%%%%%%
-\begin{thebibliography}{99}
+\begin{thebibliography}{10}
+\bibitem{datadescription} \url{http://archive.ics.uci.edu/ml/datasets/Abalone}
+\bibitem{gam} \url{https://en.wikipedia.org/wiki/Generalized_additive_model}
 \bibitem{Waugh.thesis} S.~Waugh,''Extending and Benchmark
   Cascade-Correlation,'' Thesis, 1997.
 \bibitem{Mayukh} H.~Mayukh, ``Age of Abalones using Physical
   Characteristics: A Classification Problem,'' ECE 539 Fall 2010
   Project Report, Department of Electrical and Computer Engineering
   University of Wisconsin-Madison, 2010.
-\bibitem{datadescription} \url{http://archive.ics.uci.edu/ml/datasets/Abalone}
 \end{thebibliography}
 \end{document}
-
-%% \begin{lstlisting}[label = lst:logistic_regression, caption = {Results of logistic regression}]
-%%   Call:
-%% glm(formula = Class ~ Malaise + Ascites + Bilirubin + Histology, 
-%%     family = binomial(link = logit), data = data)
-
-%% Deviance Residuals: 
-%%     Min       1Q   Median       3Q      Max  
-%% -2.7029   0.2382   0.2888   0.4330   1.8019  
-
-%% Coefficients:
-%%             Estimate Std. Error z value Pr(>|z|)   
-%% (Intercept)   1.2874     0.8407   1.531  0.12567   
-%% Malaise       0.9020     0.5670   1.591  0.11162   
-%% Ascites       1.9074     0.6621   2.881  0.00397 **
-%% Bilirubin    -0.7838     0.2613  -3.000  0.00270 **
-%% Histology    -0.9933     0.6132  -1.620  0.10529   
-%% ---
-%% Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-%% (Dispersion parameter for binomial family taken to be 1)
-
-%%     Null deviance: 145.117  on 144  degrees of freedom
-%% Residual deviance:  91.903  on 140  degrees of freedom
-%%   (10 observations deleted due to missingness)
-%% AIC: 101.9
-
-%% Number of Fisher Scoring iterations: 5
-%% \end{lstlisting}

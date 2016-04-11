@@ -129,9 +129,9 @@ print(paste('- Test error:', sum(Error_test_fs)/sum(CV$TestSize)));
 par(mfrow=c(1,1))
 bmplot(attributeNames, 1:K, Features, xlab='Crossvalidation fold', ylab='', main='Attributes selected')
 
+#### TODO - FIX this!
+## res.lr<- list(
+##   K1=1:3, ANN=log(Error), FLR=Error_test_fs, ave=average
+## )
 
-res.lr<- list(
-  K1=1:3, ANN=log(Error), FLR=Error_test_fs, ave=average
-)
-
-PlotClsfComparison1(res.lr)
+## PlotClsfComparison1(res.lr)

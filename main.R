@@ -35,7 +35,7 @@ source('src/forwardSelection.R') # Forward selection function
 ## predict(fit, data[31, ], type = "response");
 ########################################
 #################### Classification part
-N.groups = 5;
+## N.groups = 5;
 ####################
 ########## Decision trees
 ## PlotAgeGrouping(N.groups);
@@ -61,10 +61,12 @@ N.groups = 5;
 ########## Artificial neural network
 ## FitANN(N.groups, NHiddenUnits = 4, cut = 1);
 ## PlotANNModel(model);
-res.ANN <- FitANNCV2(N.groups, NHiddenUnits.max = 5, K1 = 10, K2 = 10, cut = 2);
-PlotANNCV2(res.ANN);
+## res.ANN <- FitANNCV2(N.groups, NHiddenUnits.max = 5, K1 = 10, K2 = 10, cut = 2);
+## PlotANNCV2(res.ANN);
 ########## Compare classifiers
 ## res.comp <- CompareClassifiers(N.groups, K = 10, cut = 2);
 ## PlotClsfComparison(res.comp);
+########## JLV part
+## source("src/forward_LR.R");
 ######################################## End of Main part
 ################################################################################

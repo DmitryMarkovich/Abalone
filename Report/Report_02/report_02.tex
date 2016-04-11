@@ -51,11 +51,8 @@
 \label{sec:regression}
 
 \subsection{Problem description}
-The linear regression objective is to predict the Abalon's age based
-on 9 given attributes.  The attributes considered for Linear
-Regression (LR) are presented next: Sex, Length, Diameter, Height,
-Whole weight (WhlWght), Shucked weight (ShckdWght), Viscera weight
-(VscrWght) and Shell weight (ShllWght).  More details about the data
+The objective of the Linear Regression (LR) is to predict the Abalon's age based
+on 9 given attributes. The attributes considered for the LR are presented next: Sex, Length, Diameter, Height, Whole weight (WhlWght), Shucked weight (ShckdWght), Viscera weight(VscrWght) and Shell weight (ShllWght).  More details about the data
 set can be found in \cite{datadescription}.
 
 \subsection{Linear Regression with forward selection}
@@ -76,12 +73,11 @@ needed.
   \label{fig:gam}
 \end{figure}
 
-Additionally, an initial LR model was implemented in order to check
+An initial LR model was implemented in order to check
 the model's assumptions.  Fig.~\ref{fig:modelcheck}a clearly shows a
-trumpet shape that suggests the need for a logarithmic transformation
-of the response variable Age.  Additionally, it is clear from the
-Cook's distance that observation 2052 is an outlier and therefore is
-removed from the data.
+trumpet shape in the residuals that suggests the need for a logarithmic transformation
+of the response variable Age.  Additionaly, it is clear from the
+Cook's distance that the observation 2052 is an outlier and therefore was removed from the data.
 
 \begin{figure}[h]
   \begin{minipage}{0.3\textwidth}
@@ -130,8 +126,8 @@ The forward selection (FLR) with 10-fold cross-validation to perform
 sequential feature selection was implemented considering previous
 analysis.  Fig.~\ref{fig:modelcheck}b shows the squared error and the
 attributes selected in each iteration.  The model obtained at
-iteration 10 has the lowest error and is therefore the best model
-produced by the method.
+iteration 10 has the lowest error, therefore is the best model
+produced by the forward selection method.
 
 \subsection{Model Interpretation}
 The formula of the best model in Fig.~\ref{fig:modelcheck}b reads:
@@ -141,7 +137,7 @@ The formula of the best model in Fig.~\ref{fig:modelcheck}b reads:
 \end{equation}
 
 The coefficients of the model can be found in
-Fig.~\ref{fig:modelcheck}c.  The Age base line is described by the
+Fig.~\ref{fig:modelcheck}d.  The Age base line is described by the
 intercept.  Then, the positive coefficients in the attributes SexM,
 Length, Diameter, Height, WhlWght, ShckdWght$^2$ and ShllWght
 indicated that the Age is expected to be higher if the values of this
@@ -149,11 +145,11 @@ attributes increase.  On the other hand, the negative coefficients for
 SexI, Length$^2$, WhlWght$^2$ indicated a reduction in the expected
 Age.  Notice that the negative coefficients of the squared attributes
 represent a correction in the linear attributes.  This is due to the
-fact that Age is in a nonlinear relation with these terms.
+fact that Age presents a nonlinear relation with these attributes.
 
 Eq.~\ref{eq:model_formula} model check is presented in
 Fig.~\ref{fig:modelcheck}c.  A pattern in the residuals can be clearly
-seen on the residuals plot, and the Normal Q-Q plot shows a deviation
+seen on the residuals plot and the Normal Q-Q plot shows a deviation
 from normality.
 
 %% \newpage
@@ -183,10 +179,10 @@ from normality.
 
 \subsection{Artificial Neural Network}
 An Artificial Neural Network (ANN) model to solve the regression
-problem is the following.  Age is a continuous variable, a function of
-all other attributes.  The ANN was implemented using $k=3$
-cross-validation folds and 1 hidden unit.  Fig.~\ref{fig:ann_lr}a
-shows the best of the three ANN fitted.  The residual error for each
+problem was implemented.  Age is a continuous variable as a function of
+all other attributes. The ANN was implemented using $k=3$
+cross-validation folds and 1 hidden unit. Fig.~\ref{fig:ann_lr}a
+shows the best of the three ANN fitted. The residual error for each
 of the cross-validation splits is shown in Fig.~\ref{fig:ann_lr}b.
 
 %% The ANN was fitted to considering a logarithmic transformation of the
@@ -211,15 +207,15 @@ of the cross-validation splits is shown in Fig.~\ref{fig:ann_lr}b.
   \end{minipage} \vfill
   \caption{a) Visualization of the ANN with one hidden unit fitted to
     the data.  b) Residual error for each of the cross-validation
-    folds.  c) {\color{red} NEED FIXES FOR THE PLOT!} Performance
-    comparison of FLR, ANN, and average age (AVE) model.}
+    folds.  c) Performance
+    comparison of FLR, ANN, and average Age (AVE) model.}
   \label{fig:ann_lr}
 \end{figure}
 
 
 \subsection{Models Comparison}
 The comparison of the models was made using 3-fold cross-validation
-for the ANN and the LR with forward selection models along with the
+for the ANN and the FLR along with the
 error for the average of the training data output.
 Fig.~\ref{fig:ann_lr}c shows the results of the comparison using the
 paired t-test.  From the the plot it is clearly seen that the best

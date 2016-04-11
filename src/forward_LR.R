@@ -19,9 +19,15 @@ par(mfrow=c(1,1))
 ## checkig normality with a simple linear regression
 lm1 <- lm( (Age)~(Sex+Length+I(Length^2)+Diameter+Height+WhlWght+I(WhlWght^2)+ShckdWght+I(ShckdWght^2)+ShllWght), data = dat )
 # Check Cook's distance and normality assumptions
-par(mfrow=c(1,2))
-plot(lm1, which=c(1,4))
-par(mfrow=c(1,1))
+g.default<- par()
+par(mfrow=c(1,2), mar=c(5,5,0,2)+0.1)
+plot(lm1, which=1, ann=F, cex.axis=2)
+title(ylab = 'Residuals', xlab = 'Fitted values', cex.lab=2.5, line = 3)
+plot(lm1, which=4, ann=F, cex.axis=2)
+title(ylab = "Cook's distance", xlab = 'Obs', cex.lab=2.5, line = 3)
+#par(g.default)
+dev.off()
+
 # Removing observation 2052 according to Cook's distance
 dat1<- dat[-2052,]
 # The plot shows a trompet shape, sugesting a log transformation of Age
@@ -80,7 +86,7 @@ Error_test_fs <- matrix(rep(NA, times=K), nrow=K)
 average<- c(rep(NA,K))
 
 ## For each crossvalidation fold (outer cross validation loop)
-for(k in 1:K) {
+for(k in 1:K){
   paste('Crossvalidation fold ', k, '/', K, sep='')
   
   # Extract the training and test set
@@ -93,11 +99,9 @@ for(k in 1:K) {
   
   # Use 10-fold crossvalidation for sequential feature selection
   fsres <- forwardSelection(funLinreg, X_train, y_train, nfeats=10);
-  # training data output
-  average[k]<- sum( (mean(y_train)-y_test)^2 );
   
   # Save the selected features
-  Features[k,] = fsres$binaryFeatsIncluded
+  Features[k,] = fsres$binaryFeatsIncluded    
   # Compute squared error without feature subset selection
   Error_train[k] = funLinreg(X_train, y_train, X_train, y_train);
   Error_test[k] = funLinreg(X_train, y_train, X_test, y_test);
@@ -108,11 +112,13 @@ for(k in 1:K) {
   # Show variable selection history
   #    mfig(sprintf('(%d) Feature selection',k));
   I = length(fsres$costs) # Number of iterations
-  par(mfrow=c(1,2))
+  par(mfrow=c(1,1), mar=c(5,5,5,2)+0.1)
   # Plot error criterion
-  plot(fsres$costs, xlab='Iteration', ylab='Squared error (crossvalidation)', main='Value of error criterion');
+  #plot(fsres$costs, xlab='Iteration', ylab='Squared error (crossvalidation)', main='Value of error criterion');
+  plot(fsres$costs, ann=F, cex.axis=2)
+  title(xlab='Iteration', ylab='Squared error (crossvalidation)', main='Value of error criterion', cex.lab=2.5, line = 3, cex.main=2.5)
   # Plot feature selection sequence
-  bmplot(attributeNames, 1:I, fsres$binaryFeatsIncludedMatrix);
+  #bmplot(attributeNames, 1:I, fsres$binaryFeatsIncludedMatrix);
 }
 
 # Display results
@@ -127,11 +133,11 @@ print(paste('- Test error:', sum(Error_test_fs)/sum(CV$TestSize)));
 # Show the selected features
 #dev.off()
 par(mfrow=c(1,1))
-bmplot(attributeNames, 1:K, Features, xlab='Crossvalidation fold', ylab='', main='Attributes selected')
+bmplot(attributeNames, 1:K, Features, xlab='Crossvalidation fold', ylab='', main='Attributes selected', ann=F)
 
-#### TODO - FIX this!
-## res.lr<- list(
-##   K1=1:3, ANN=log(Error), FLR=Error_test_fs, ave=average
-## )
+#TODO - FIX this!
+ res.lr<- list(
+   K1=1:3, ANN=log(Error), FLR=Error_test_fs, ave=average
+ )
 
-## PlotClsfComparison1(res.lr)
+PlotClsfComparison1(res.lr)

@@ -4,6 +4,7 @@
 dat<- LoadData(binarize = F)
 dat$Sex<- as.integer(dat$Sex)
 dat$Rings <- NULL;
+#dat$Age<- log(dat$Age)
 
 ## setting variables to use in the ANN
 # separating response and attributes
@@ -31,7 +32,7 @@ NTrain = 2; # Number of re-trains of neural network
 
 # Variable for classification error
 Error = rep(NA, times=K)
-(fmla <- as.formula(paste("log(y_train) ~ ", paste(attributeNames, collapse= "+"))))
+(fmla <- as.formula(paste("y_train ~ ", paste(attributeNames, collapse= "+"))))
 
 # For each crossvalidation fmla
 for(k in 1:K){
@@ -79,7 +80,7 @@ print(paste('Mean Sum of Squares Error (MSSE): ', sum(Error)/sum(CV$TestSize), s
 plot(bestnet)
 
 pdf("ANN_LR_Error.pdf", width = 12, height = 9)
-barplot(log(Error), xlab='Number of cross-validation split', names.arg = c("k=1","k=2","k=3"), las=1,
+barplot(Error, xlab='Number of cross-validation split', names.arg = c("k=1","k=2","k=3"), las=1,
         main="Residual error", cex.lab = 2, cex.axis = 1, cex.main=2)
 dev.off()
 

@@ -460,7 +460,7 @@ PlotClsfComparison <- function(res.comp) {
 
 ################################################################################
 PlotClsfComparison1 <- function(res.comp) {
-  pdf(file = paste0(project.path, "/output/Regression_comparison.pdf"),
+  pdf(file = paste0(project.path, "/output/Regression_comparison1.pdf"),
       width = 12, height = 9, bg = "white");
   ## mar = c(bottom, right, up, left), mgp = c(?, tick values, ticks)
   par(mar = c(4, 6, 2, 2), mgp = c(10, 1, 0));

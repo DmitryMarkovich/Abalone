@@ -416,7 +416,7 @@ PlotANNModel <- function(model) {
 
 ################################################################################
 PlotClsfComparison <- function(res.comp) {
-    pdf(file = paste0(project.path, "/output/classifier_comparison.pdf"),
+    pdf(file = paste0(project.path, "/output/Regression_comparison.pdf"),
         width = 12, height = 9, bg = "white");
     ## mar = c(bottom, right, up, left), mgp = c(?, tick values, ticks)
     par(mar = c(4, 6, 2, 2), mgp = c(10, 1, 0));
@@ -455,3 +455,50 @@ PlotClsfComparison <- function(res.comp) {
     dev.off();
 }  ## End of PlotErrNN
 ################################################################################
+
+################################################################################
+
+################################################################################
+PlotClsfComparison1 <- function(res.comp) {
+  pdf(file = paste0(project.path, "/output/Regression_comparison.pdf"),
+      width = 12, height = 9, bg = "white");
+  ## mar = c(bottom, right, up, left), mgp = c(?, tick values, ticks)
+  par(mar = c(4, 6, 2, 2), mgp = c(10, 1, 0));
+  plot(res.comp$K1, res.comp$ave, col = "black",
+       type = "b", pch = 16, cex = 1.5, lwd = 3,
+       xlab = NA, ylab = NA, las = 1, axes = FALSE,
+       ylim = c(min(res.comp$ANN), max(res.comp$FLR))
+       ## ylim = c(19, 30)
+  );
+  ## abline(h = mean(res.comp$ErrRate), lwd = 2, lty = 1);
+  ## text(x = median(res.comp$k1), y = 1.01 * mean(res.comp$ErrRate),
+  ##      label = signif(mean(res.comp$ErrRate), 3), cex = 2);
+  ## abline(v = (1:length(err))[err == min(err)[1]], lwd = 2, lty = 2);
+  box();
+  ## print(paste0(">> Min error rate = ", min(err)[1]));
+  grid(col = "black", lty = 2, lwd = 1);
+  axis(side = 1, lwd = 1, line = 0.0, cex.axis = 2.0);
+  title(xlab = paste0("Number of cross-validation split"), line = 2.5, cex.lab = 2.0);
+  axis(side = 2, lwd = 1, line = 0.0, cex.axis = 2.0, las = 1);
+  title(ylab = paste0("Error rate, %"), line = 4,
+        cex.lab = 2.0, adj = NULL);
+  title(main = paste0("Classifier comparison with one-layer cross-validation"),
+        line = 0.5, cex.main = 2);
+  lines(res.comp$K1, res.comp$ANN, type = "b", cex = 1.5, col = 2, pch = 16);
+  lines(res.comp$K1, res.comp$FLR, type = "b", cex = 1.5, col = 3, pch = 16);
+  Cl1Cl2 <- t.test(res.comp$ANN, res.comp$ave)$p.value;
+  Cl1Cl0 <- t.test(res.comp$ANN, res.comp$FLR)$p.value;
+  Cl2Cl0 <- t.test(res.comp$FLR, res.comp$ave)$p.value;
+  legend("right",
+         legend = c("AVE", paste0("ANN (p = ", signif(Cl1Cl0, 3), ")"),
+                    paste0("FLR (p = ", signif(Cl2Cl0, 3), ")"),
+                    paste0("ANN vs FLR (p = ", signif(Cl1Cl2, 3), ")")),
+         col = c("black", 2, 3, 1), pch = c(16, 16, 16, NA),
+         lty = c(1, 1, 1, NA), cex = 1.5, ncol = 1
+  );
+  dev.off();
+}  ## End of PlotErrNN
+################################################################################
+
+
+

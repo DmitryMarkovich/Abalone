@@ -34,8 +34,7 @@
   naive bayes (NB), artificial neural networks (ANN), and multinomial
   regression (MNMR) methods.  For classification problem, we found the
   ANN and MNMR to be the best performing models, and showed them to
-  perform better than the largest class (Lcl) classifier using the
-  paired t-test.
+  perform better than the largest class (Lcl) classifier and the linear regression models (LR) using the paired t-test.
   %% Objective: The objective of this second report is to apply the
   %% methods you have learned in the second section of the course on
   %% ”Supervised learning: Classification and regression” in order to
@@ -57,9 +56,9 @@ in \cite{datadescription}.
 
 \subsection{Linear Regression with forward selection}
 Prior to the LR, the relation between the dependent variable Age and
-the independent attibutes was explored by a generalized additive
+the independent attributes was explored by a generalized additive
 model. Fig.~\ref{fig:gam} shows that the attributes Length, WhlWght
-and ShckdWght do not have a liner relation with Age. The grahps
+and ShckdWght do not have a liner relation with Age. The graphs
 suggest that exponential terms of this attributes are needed.
 
 \begin{figure}[h]
@@ -71,7 +70,7 @@ suggest that exponential terms of this attributes are needed.
 
 Additionally, an initial LR model was implemented in order to check
 the model's assumptions. Fig.~\ref{fig:modelcheck} shows a clearly
-trompet shape suggesting the need for a logaritmic transformation of
+trumpet shape suggesting the need for a logarithmic transformation of
 the response variable Age. Additionally, from the cook's distance it
 is clearly that observation 2052 corresponds to and outlier and it
 will be removed from the data.
@@ -84,7 +83,7 @@ will be removed from the data.
   \label{fig:modelcheck}
 \end{figure}
 
-The forward slection with 10-fold cross-validation to perform
+The forward selection with 10-fold cross-validation to perform
 sequential feature selection was implemented considering previous
 analysis. Fig.~\ref{fig:forwardselection} shows Squared error and the
 attributes selected in each iteration. From the plots it is clear that
@@ -117,22 +116,15 @@ this terms.
 \newpage
 \begin{table}[ht]
 \centering
-\begin{tabular}{rr}
+\begin{tabular}{rrrrrrrrrrrrr}
   \hline
- Attributes & Coefficients \\ 
+ & (Intercept) & SexI & SexM & Length & $Length^2$ & Diameter \\ 
+ \hline
+ Coefficients & 0.252 & -0.027 & 0.002 & 1.781 & -1.800 & 0.271 \\
+ \hline
+ & Height & WhlWght & $WhlWght^2$ & ShckdWght & $ShckdWght^2$ & ShllWght \\ 
   \hline
-  Intercept & 1.177 \\ 
-  Sex-Infant & -0.060 \\ 
-  Sex-Masculine & 0.004 \\ 
-  Length & 3.274 \\ 
-  Length$^2$ & -3.507 \\ 
-  Diameter & 0.601 \\ 
-  Height & 0.843 \\ 
-  WhlWght & 1.186 \\ 
-  WhlWght$^2$ & -0.265 \\ 
-  ShckdWght & -2.839 \\ 
-  ShckdWght$^2$ & 1.379 \\ 
-  ShllWght & 0.889 \\ 
+ Coefficients & 0.358 & 0.444 & -0.097 & -1.138 & 0.568 & 0.338 \\ 
    \hline
 \end{tabular}
 \caption{Model coefficients}
@@ -140,20 +132,47 @@ this terms.
 \end{table}
 
 Finally, Fig.~\ref{fig:finalmodelcheck} shows the final model
-assumptions check. From the Residuals vs Fitted plot it can be seen a
+assumptions check. From the Residuals Vs Fitted plot it can be seen a
 pattern in the residuals. Additionally, the Normal Q-Q plot shows what
 seems to be a deviation from normality.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width = 0.99\textwidth]{finalmodelcheck.pdf}
+  \includegraphics[width = 0.49\textwidth]{finalmodelcheck.pdf}
   \caption{Final model assumptions check.}
   \label{fig:finalmodelcheck}
 \end{figure}
 
 \subsection{Artificial Neural Network}
+An Artificial Neural Network (ANN) was implemented to solve the regression problem. Age was managed like a continuous variable as function of the attributes. The ANN was implemented using $k=3$ cross-validation folds and 1 hidden unit. Fig.~\ref{fig:ann_lr} (a). shows the best of the three ANN fitted. Additionally, Fig.~\ref{fig:ann_lr} (b). shows the residuals error for each one of the cross-validation splits.
 
-\subsection{Model Comparison}
+It is important to mention that the ANN was fitted to considering a logarithmic transformation of the response variable. This was due to this transformation was made in the previous section and was important to have the same scale in both models in order to make a proper comparison.
+
+\newpage
+\begin{figure}[h]
+  \centering
+  \begin{minipage}{0.49\textwidth}
+  a)\\
+  \includegraphics[width = 0.99\textwidth]{ANN_LR.pdf}
+\end{minipage} \hfill
+	 \begin{minipage}{0.49\textwidth}
+  b)\\
+  \includegraphics[width = 0.99\textwidth]{ANN_LR_Error.pdf}
+\end{minipage} \vfill
+  \caption{ANN for the linear regression problem}
+  \label{fig:ann_lr}
+\end{figure}
+
+
+\subsection{Models Comparison}
+The comparison of the models was made based Cross-validation approach with 3-folds for the ANN and the LR with forward selection models along with the error for the average of the training data output. Fig.~\ref{fig:lr_comparison} shows the comparison results. From the the plot it is clearly seen that the best method was the ANN having a lower error in each of the Cross-validation folds. Notice that the comparison of the models was made only with 3-folds, this was due to the ANN was highly computational demanding making the task difficult for a bigger number of folds.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width = 0.49\textwidth]{Regression_comparison1.pdf}
+\caption{Error rate comparison between ANN, Average and LR with forward selection}
+\label{fig:lr_comparison}
+\end{figure}
 
 \clearpage
 %%%%%%%%%%%%%%%%%%%% Classification %%%%%%%%%%%%%%%%%%%%
@@ -533,6 +552,8 @@ quantile splitting.  Statistical comparison of ANN and MNMR using the
 paired t-test showed that the classifiers are not significantly
 different from each other, but significantly different from the
 ``null'' largect class classifier.
+
+Results from the regression models shows difficulties in order to fulfill the normality assumptions. Thus, a logarithmic transformation of the dependent variable was needed. This approach is not recommended due to a data transformation could difficult the comparison between models because of the different scale of the data. Furthermore, model's coefficients interpretation should be manage with care because of the same fact.
 
 
 %% If your data has previously been analyzed by regression or

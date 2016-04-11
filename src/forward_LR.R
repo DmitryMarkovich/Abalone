@@ -19,7 +19,7 @@ par(mfrow=c(1,1))
 ## checkig normality with a simple linear regression
 lm1 <- lm( (Age)~(Sex+Length+I(Length^2)+Diameter+Height+WhlWght+I(WhlWght^2)+ShckdWght+I(ShckdWght^2)+ShllWght), data = dat )
 # Check Cook's distance and normality assumptions
-par(mfrow=c(2,1))
+par(mfrow=c(1,2))
 plot(lm1, which=c(1,4))
 par(mfrow=c(1,1))
 # Removing observation 2052 according to Cook's distance
@@ -29,6 +29,9 @@ dat1<- dat[-2052,]
 
 # ------------------ Cross validation section -------------------------------
 
+# log transformation
+dat1$Age <- log(dat1$Age)
+  
 ### Linear regression with Forward selection ###
 
 ## Linear function to use in inside the loop
@@ -39,10 +42,10 @@ funLinreg <- function(X_train, y_train, X_test, y_test){
     xnam <- paste("X", 1:dim(as.matrix(X_train))[2], sep="")
     colnames(Xr) <- xnam
     colnames(Xtest) <- xnam
-    (fmla <- as.formula(paste("log(y_train) ~ ", paste(xnam, collapse= "+"))))
+    (fmla <- as.formula(paste("y_train ~ ", paste(xnam, collapse= "+"))))
   }else{
     xnam <- 1
-    (fmla <- as.formula(paste("log(y_train) ~ ", paste(xnam, collapse= "+"))))
+    (fmla <- as.formula(paste("y_train ~ ", paste(xnam, collapse= "+"))))
   }
   mod = lm(fmla, data=Xr)
   preds <- predict(mod, newdata = Xtest)
@@ -61,7 +64,7 @@ X$ShckdWght.2<- (dat1$ShckdWght)^2
 attributeNames<- colnames(X)
 y<- log(dat1$Age)
 M<- dim(X)[2]
-K<- 1 # folds in the cross validation outer level
+K<- 2 # folds in the cross validation outer level
 CV <- cvFolds(N, K=K)
 
 # set up vectors that will store sizes of training and test sizes
@@ -74,6 +77,7 @@ Error_train <- matrix(rep(NA, times=K), nrow=K)
 Error_test <- matrix(rep(NA, times=K), nrow=K)
 Error_train_fs <- matrix(rep(NA, times=K), nrow=K)
 Error_test_fs <- matrix(rep(NA, times=K), nrow=K)
+average<- c(rep(NA,K))
 
 ## For each crossvalidation fold (outer cross validation loop)
 for(k in 1:K) {
@@ -89,6 +93,8 @@ for(k in 1:K) {
   
   # Use 10-fold crossvalidation for sequential feature selection
   fsres <- forwardSelection(funLinreg, X_train, y_train, nfeats=10);
+  # training data output
+  average[k]<- sum( (mean(y_train)-y_test)^2 );
   
   # Save the selected features
   Features[k,] = fsres$binaryFeatsIncluded
@@ -123,3 +129,9 @@ print(paste('- Test error:', sum(Error_test_fs)/sum(CV$TestSize)));
 par(mfrow=c(1,1))
 bmplot(attributeNames, 1:K, Features, xlab='Crossvalidation fold', ylab='', main='Attributes selected')
 
+
+res.lr<- list(
+  K1=1:3, ANN=log(Error), FLR=Error_test_fs, ave=average
+)
+
+PlotClsfComparison1(res.lr)

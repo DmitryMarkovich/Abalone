@@ -33,12 +33,12 @@
   with forward selection (FLR), decision trees (DT), k nearest
   neighbors (KNN), naive bayes (NB), artificial neural networks (ANN),
   and multinomial regression (MNMR) methods.  For regression problem,
-  we found that the ANN model performs best, and the FLR and AVE
-  models are indistinguishable from each other.  For classification
-  problem, we found the ANN and MNMR to be the best performing models,
-  and showed them to perform better than the largest class (Lcl)
-  classifier and the linear regression models (LR) using the paired
-  t-test.
+  we found that the ANN model performs best, and the FLR and the
+  average age (AVE) models are indistinguishable from each other.  For
+  classification problem, we found the ANN and MNMR to be the best
+  performing models, and showed them to perform better than the
+  largest class (LCl) classifier and the linear regression models (LR)
+  using the paired t-test.
   %% Objective: The objective of this second report is to apply the
   %% methods you have learned in the second section of the course on
   %% ”Supervised learning: Classification and regression” in order to
@@ -51,9 +51,12 @@
 \label{sec:regression}
 
 \subsection{Problem description}
-The objective of the Linear Regression (LR) is to predict the Abalon's age based
-on 9 given attributes. The attributes considered for the LR are presented next: Sex, Length, Diameter, Height, Whole weight (WhlWght), Shucked weight (ShckdWght), Viscera weight(VscrWght) and Shell weight (ShllWght).  More details about the data
-set can be found in \cite{datadescription}.
+The chosen regression problem is to predict the age of abalones based
+on the 9 given attributes.  These attributes are the following ---
+Sex, Length, Diameter, Height, Whole weight (WhlWght), Shucked weight
+(ShckdWght), Viscera weight(VscrWght) and Shell weight (ShllWght).
+More details about the data set can be found in
+\cite{datadescription}.
 
 \subsection{Linear Regression with forward selection}
 Prior to the LR, the relation between the dependent variable Age and
@@ -477,7 +480,7 @@ and MNMR show the best results, and NB --- the worst.  If exactly the
 same analysis as described above is performed using the alternative
 quantile groups splitting as shown in Fig.~\ref{fig:age_grouping}c,
 then the performance table for the methods looks like in
-Fig.~\ref{fig:performance}d.  Again, ANN and MNMR show the best
+Fig.~\ref{fig:performance}f.  Again, ANN and MNMR show the best
 results, and NB is the worst, but the error rate of all methods except
 NB becomes effectively twice as large.
 
@@ -554,16 +557,16 @@ compare their performance between each other, as well as with the
 two models is performed in the following way.  The populations of the
 error rates of the classifiers are compared using a paired t-test, and
 if the difference in their means is significantly non-zero, then one
-classifier is better than the other.  The outer layer of the
-cross-validation is used to get a sample of generalization errors of
-the two models.  Next, if the means of the populations of the error
+classifier significantly different from the other.  The outer layer of
+the cross-validation is used to get a sample of generalization errors
+of the two models.  Next, if the means of the populations of the error
 rates are significantly different, the test-statistic will produce a
 very low p-value (p-value $\leq$ 0.05) of the paired t-test, which
 under the null hypothesis indicates the probability that the
 classifiers are not significantly different.  The populations of the
-error rates of Lcl, ANN, and MNMR models are presented in
+error rates of LCl, ANN, and MNMR models are presented in
 Fig.~\ref{fig:comparison}.  In parenthesis after ANN and MNMR, the
-p-value of the paired t-test comparing the classifier with Lcl is
+p-value of the paired t-test comparing the classifier with LCl is
 presented.  The p-value of the t-test comparing ANN with MNMR is
 presented separately.
 
@@ -576,10 +579,10 @@ presented separately.
     b) Group quantiles splitting using \verb|cut2|\\
     \includegraphics[width = 0.9\textwidth]{classifier_comparison_cut_2.pdf}
   \end{minipage} \vfill
-  \caption{The populations of the error rates of Lcl, ANN, and MNMR
+  \caption{The populations of the error rates of LCl, ANN, and MNMR
     models are presented in Fig.~\ref{fig:comparison}.  In parenthesis
     after ANN and MNMR, the p-value of the paired t-test comparing the
-    classifier with Lcl is presented.  The p-value of the t-test
+    classifier with LCl is presented.  The p-value of the t-test
     comparing ANN with MNMR is presented separately. a) Equal length
     splitting of the Age attribute.  b) Group quantiles splitting of
     the Age attribute.}

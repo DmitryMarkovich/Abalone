@@ -18,8 +18,6 @@ kClassColors <- c("black", "red", "green");
 kAttributeImportance <- c("Sex", "Length", "Height", "WhlWght", "ShllWght",
                           "VscrWght", "Diameter", "ShckdWght");
 
-kAttributeNamesPCA <- c("Age", "Steroid", "Antivirals", "Fatigue",
-                        "Malaise", "Anorexia", "LiverBig", "LiverFirm",
-                        "SpleenPalpable", "Spiders", "Ascites", "Varices",
-                        "Bilirubin", "AlkPhosphate", "SGOT", "Albumin", "Protime",
-                        "Histology", "Male", "Female");
+kAttributeNamesPCA <- c("Length", "Diameter", "Height", "WhlWght",
+                        "ShckdWght", "VscrWght", "ShllWght", "Male",
+                        "Female", "Infant");

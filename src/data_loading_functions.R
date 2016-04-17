@@ -1,11 +1,11 @@
 ## file: data_loading_functions.R
 ## description: defines a collection of functions used to load the data
 ################################################################################
-LoadData <- function(binarize = TRUE) {
+LoadData <- function(sex.binarize = TRUE, rings.rm = FALSE) {
     if (file.exists(paste0("./data/", kDataFname))) {
         data <- read.table(file = paste0("./data/", kDataFname), header = FALSE,
                            sep = ",", col.names = kAttributeNames);
-        if (binarize) {
+        if (sex.binarize) {
             ## split Sex attribute into Male, Female, Infant
             data$Male <- as.integer(data$Sex == "M");
             data$Female <- as.integer(data$Sex == "F");
@@ -13,12 +13,27 @@ LoadData <- function(binarize = TRUE) {
             data$Sex <- NULL;
         }
         data$Age <- 1.5 + data$Rings;
+        if (rings.rm) {
+            data$Rings <- NULL;
+        }
         return(data);
     } else {
         warning(paste0(">> ", kDataFname,  " was not found, returning NULL!"));
         return(NULL);
     }
 }  ## End of LoadData
+################################################################################
+
+################################################################################
+SplitAge <- function(Age, cut = 1, N.groups = 5) {
+    if (cut == 1) {
+        return(cut(Age, breaks = N.groups));
+    } else if (cut == 2) {
+        return(cut2(Age, g = N.groups));
+    } else {
+        stop(">> Unknown cut value!");
+    }
+}  ## End of SplitAge
 ################################################################################
 
 #################### Legacy code

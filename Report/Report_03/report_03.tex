@@ -1,0 +1,102 @@
+%%%%%%%%%%%%%%%%%%%% Preamble %%%%%%%%%%%%%%%%%%%%
+\documentclass[10pt, paper=a4]{article}
+\usepackage{amssymb,amsfonts,amsmath,latexsym,amsthm, mathtools} %mathtext,
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{chngpage}
+\usepackage{cprotect}
+\usepackage[font=footnotesize, labelsep=period]{caption}
+\usepackage{cite}
+\usepackage[scale=0.925]{geometry}
+\graphicspath{{images/}}
+\usepackage[pdftex,unicode,colorlinks, citecolor=blue,
+  filecolor=black, linkcolor=blue, urlcolor=blue]{hyperref}
+\usepackage[figure,table]{hypcap}
+%%%%%%%%%%%%%%%%%%%% Document %%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%%%%% Title page %%%%%%%%%%%%%%%%%%%%
+\title{Report 03 --- Clustering, association mining and outlier detection in
+  abalones}
+
+\author{Dmitriy Markovich (s146577) and Julian Lemos Vinasco (s150959)}
+
+\date{}
+
+\maketitle
+
+\begin{abstract}
+Objective: The objective of this third and final report is to apply the methods
+you have learned in the third section of the course on ``Unsupervised learning:
+Clustering and density estimation'' in order to cluster your data, mine for
+associations as well as detect if there may be outliers in your data.
+\end{abstract}
+
+%%%%%%%%%%%%%%%%%%%% Clustering
+\section{Clustering}
+\label{sec:clustering}
+In this part of the report you should attempt to cluster your data and evaluate
+how well your clustering reflects the labeled information. If your data is a
+regression problem define two or more classes by dividing your output into
+intervals defining two or more classes as you did in report 2.
+
+\begin{enumerate}
+  \item Cluster your data by the Gaussian Mixture Model (GMM) and use cross-
+    validation to estimate the number of components in the GMM. Try to interpret
+    the extracted cluster centers.
+  \item Perform a hierarchical clustering of your data using a suitable
+    dissimilarity measure and linkage function. Try to interpret the results of
+    the hierarchical clustering.
+  \item Evaluate the quality of the clustering in terms of your label
+    information for the GMM as well as for the hierarchical clustering where the
+    cut-off is set at the same number of clusters as estimated by the GMM.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%% Association mining
+\section{Association mining}
+\label{sec:association}
+In this part of the report you are to investigate if there are associations
+among your attributes based on association mining. In order to do so you will
+need to make your data binary, see also exercise 10. (For categoric variables
+you can use the one-out-of-K coding format). You will need to save the binarized
+data into a text file that can be analyzed by the Apriori algorithm.
+
+\begin{enumerate}
+\item Run the Apriori algorithm on your data and find frequent itemsets as well
+  as association rules with high confidence.
+\item Try and interpret the association rules generated.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%% Outlier / Anomaly detection
+\section{Outlier / Anomaly detection}
+\label{sec:detection}
+In this part of the exercise you should apply some of the scoring methods for
+detecting outliers you learned in Exercise 11.  In particular, you should
+
+\begin{enumerate}
+  \item Rank all the observations in terms of the Gaussian Kernel density (using
+    leave- one-out), KNN density, KNN average relative density and distance to
+    Kth nearest neighbor for some suitable K. (If the scale of each attribute in
+    your data are very different it may turn useful to normalize the data prior
+    to the analysis).
+  \item Discuss whether it seems there may be outliers in your data according to
+    the four scoring methods.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%% Results and discussion
+\section{Results and discussion}
+\label{sec:results_and_discussion}
+
+%%%%%%%%%%%%%%%%%%%% Bibliography %%%%%%%%%%%%%%%%%%%%
+\begin{thebibliography}{10}
+\bibitem{datadescription} \url{http://archive.ics.uci.edu/ml/datasets/Abalone}
+\bibitem{gam} \url{https://en.wikipedia.org/wiki/Generalized_additive_model}
+\bibitem{Waugh.thesis} S.~Waugh,''Extending and Benchmark Cascade-Correlation,''
+  Thesis, 1997.
+\bibitem{Mayukh} H.~Mayukh, ``Age of Abalones using Physical
+  Characteristics: A Classification Problem,'' ECE 539 Fall 2010
+  Project Report, Department of Electrical and Computer Engineering
+  University of Wisconsin-Madison, 2010.
+\end{thebibliography}
+\end{document}

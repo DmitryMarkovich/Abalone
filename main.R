@@ -18,6 +18,8 @@ source('src/bmplot.R') # Used with the forward selection function
 source('src/is.scalar.R') # Used with the forward selection function
 source('src/forwardSelection.R') # Forward selection function
 source("src/hierarchial_clustering_functions.R");  ## loads functions for hierarchial clustering
+source("src/binarize_median.R") ## Function that binarize data by median
+source("src/apriori.R") # Function that runs apriori algotithm
 
 ################################################################################
 ######################################## Main part
@@ -75,6 +77,10 @@ source("src/hierarchial_clustering_functions.R");  ## loads functions for hierar
 N.groups = 5; cut = 1;
 ##### Hierarchial clustering
 DoHClust(N.groups = N.groups, cut = cut);
+
+## Aprio section Report 3
+(apriori.result <- AprioriResutls(65,65)) # remember to change the min values.
+
 ## TODO
 ## Analyze your data by hierarchical clustering and try interpret the generated den-
 ## drogram. Use the cluster validity measures to evaluate how well the clusters reflect

@@ -17,20 +17,25 @@ source("src/compare_classifiers.R");  ## compares classifieers using one layer c
 source('src/bmplot.R') # Used with the forward selection function
 source('src/is.scalar.R') # Used with the forward selection function
 source('src/forwardSelection.R') # Forward selection function
-source("src/hierarchial_clustering_functions.R");  ## loads functions for hierarchial clustering
-
+source("src/hierarchial_clustering_functions.R");  ## loads functions for HCA
+source("src/gaussian_mixture_model_functions.R");  ## loads function for GMM
+source("src/outlier_anomaly_detection.R");  ## loads function for outlier / anomaly detection
 ################################################################################
 ######################################## Main part
 #################### Report 1
-########### Plotting / s]ummarizing raw data
+########### Plotting / summarizing raw data
 ## data <- LoadData(sex.binarize = TRUE, rings.rm = TRUE);
 ########### PCA Analysis
-##data1 <- LoadData(fact = FALSE, na.rm = TRUE);  ## loads data for PCA
-## SVD <- GetSVD();  P <- MakePCAProjection(SVD);
+## data <- LoadData(sex.binarize = TRUE, rings.rm = TRUE);  ## loads data for PCA
+## N.groups = 5; cut = 1;
+## Class <- SplitAge(Age = data$Age, cut = cut, N.groups = N.groups);
+## class.col <- as.integer(Class);
+## data$Age <- NULL;
+## SVD <- GetSVD(data);  P <- MakePCAProjection(SVD);
 ## PlotPCAVectors(SVD);
 ## PlotPCAVariations(SVD);
-## PlotPCA1vsPCA2(P, 2, 3);
-## PlotPCAProjectionParallelCoordinates(P, data);
+## PlotPCA1vsPCA2(P, 1, 2, Class, class.col);
+## PlotPCAProjectionParallelCoordinates(P, Class, class.col);
 #################### Report 2
 ########## Regression part
 ##### JLV part
@@ -73,14 +78,40 @@ source("src/hierarchial_clustering_functions.R");  ## loads functions for hierar
 ## PlotClsfComparison(res.comp);
 #################### Report 3
 N.groups = 5; cut = 1;
-##### Hierarchial clustering
-DoHClust(N.groups = N.groups, cut = cut);
+#### Gaussian mixture model
 ## TODO
-## Analyze your data by hierarchical clustering and try interpret the generated den-
-## drogram. Use the cluster validity measures to evaluate how well the clusters reflect
-## your labeled information at one of the levels of the dendrogram. If your data form a
-## regression problem you can generate class labels by suitable thresholds of your data
-## as you did when you analyzed the data as a classification problem.
+## Analyze your data by the GMM and use cross-validation to estimate the number
+## of clusters. (If you encounter the problem ”Ill-conditioned covariance” set
+## the reg- ularization parameter Regularize of gmmdistribution.fit to a small
+## constant, say 10 −6 ). Evaluate how well the clusters of the GMM model
+## correspond to class labels using the cluster validity measures from last week
+## by assigning observations to the cluster having highest probability.
 
+## res <- DoGMMCV1(N.groups = N.groups, cut = cut, K.max = 20, K1 = 5);
+## PlotGMMres(res);
+## res.gmm <- FitGMM(N.groups = N.groups, cut = cut, K = 5);
+##### Hierarchial clustering
+## TODO
+## Analyze your data by hierarchical clustering and try interpret the generated
+## den- drogram. Use the cluster validity measures to evaluate how well the
+## clusters reflect your labeled information at one of the levels of the
+## dendrogram. If your data form a regression problem you can generate class
+## labels by suitable thresholds of your data as you did when you analyzed the
+## data as a classification problem.
+
+## res.hca <- DoHClust(N.groups = N.groups, cut = cut, max.clust = 5);
+#### Compare GMM and Hclust
+## CompareGMMandHclust(res.gmm, res.hca);
+#### Outlier / Anomaly detection
+## TODO
+## Apply the outlier scoring methods from last exercise in order to rank all the
+## observations in terms of the Gaussian Kernel density (using the efficient
+## leave-one-out density estimation approach), KNN density, KNN average relative
+## density and dis- tance to K’th nearest neighbor for some suitable K. Discuss
+## whether it seems there may be outliers in your data according to the four
+## scoring methods.
+
+res <- DoAnomalyDetection(K = 30, N.outliers = 20);
+PlotOutliers(res);
 ######################################## End of Main part
 ################################################################################

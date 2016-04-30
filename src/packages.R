@@ -18,8 +18,12 @@ library(neuralnet);  ## library for ANN
 library(glmnet);
 library(dichromat);
 library(NeuralNetTools);
-## library(mlogit);
+library(mclust);
+library(mixtools);
+library(FNN);
+library(sm);
 #################### Legacy packages
+## library(mlogit);
 ## library(caret) ##
 ## library(knitr);  ## report creation package
 ## library(xtable); ## Library that produce R table in latex format

@@ -31,6 +31,8 @@ MakePCAProjection <- function(SVD) {
 }  ## End of MakePCAProjection
 ################################################################################
 
+GetSVD
+
 ################################################################################
 PlotPCAVariations <- function(SVD) {
     N <- length(SVD$d);
@@ -54,16 +56,16 @@ PlotPCAVariations <- function(SVD) {
 ################################################################################
 
 ################################################################################
-PlotPCAProjectionParallelCoordinates <- function(P, data) {
+PlotPCAProjectionParallelCoordinates <- function(P, Class, class.col) {
     ## data loaded as integers with NA's
     obs <- P[1, ]; N <- length(obs);
     pdf(paste0(project.path, "/output/PCA_parallel.pdf"),
         width = 1 * 12, height = 9, bg = "white");
     ## mar = c(bottom, right, up, left), mgp = c(?, tick values, ticks)
     par(mar = c(5, 5, 2, 0.5), mgp = c(10, 1, 0));
-    plot(1:N, obs, col = kClassColors[data[1, 1]], pch = NA, type = "l",
+    plot(1:N, obs, col = class.col, pch = NA, type = "l",
          ylim = c(min(P), max(P)),  las = 1, axes = F, xlab = NA, ylab = NA,
-         main = "PCA projection of Hepatitis data",
+         main = "PCA projection of Abalones data",
          cex.main = 2, cex.lab = 2);
     box();
     ## axis(side = 1, tck = -0.015, labels = NA);
@@ -74,10 +76,10 @@ PlotPCAProjectionParallelCoordinates <- function(P, data) {
     title(ylab = "Normalized PCA value", line = 2.5, cex.lab = 2.5);
     for (i in 2:length(P[, 1])) {
         obs <- P[i, ];
-        lines(1:N, obs, col = kClassColors[data[i, 1]]);
+        lines(1:N, obs, col = class.col);
     }
-    legend("top", leg = kAttributeLevels$Class, col = kClassColors,
-           pch = NA, lty = 1, lwd = 4, bg = "white", cex = 2, horiz = TRUE);
+    legend("topright", leg = levels(Class), col = sort(unique(class.col)),
+           pch = NA, lty = 1, lwd = 4, bg = "white", cex = 1.5, horiz = FALSE);
     dev.off();
 }  ## End of PlotDataParallelCoordinates
 ################################################################################
@@ -115,20 +117,24 @@ PlotPCAVectors <- function(SVD) {
 ################################################################################
 
 ################################################################################
-PlotPCA1vsPCA2 <- function(P, PCA1 = 1, PCA2 = 2) {
+PlotPCA1vsPCA2 <- function(P, PCA1 = 1, PCA2 = 2, Class, class.col) {
+    pdf(paste0(project.path, "/output/PCA_Projection.pdf"),
+        width = 1 * 12, height = 9, bg = "white");
     ## mar = c(bottom, right, up, left), mgp = c(?, tick values, ticks)
-    par(mar = c(4, 5, 2, 0.5), mgp = c(10, 1, 0));
+    par(mar = c(4, 6, 2, 0.5), mgp = c(10, 1, 0));
     plot(x = P[, PCA1], y = P[, PCA2], xlab = NA, axes = F, cex = 2,
-         ylab = NA, col = 1, #kClassColors[data[, 1]],
-         pch = 16,
-         ylim = c(min(P[, PCA2]), 1.5 * max(P[, PCA2])));
+         ylab = NA, col = class.col, pch = 16,
+         ylim = c(min(P[, PCA2]), 1 * max(P[, PCA2])));
     box();
     axis(side = 1, lwd = 1, line = 0.0, cex.axis = 2.0);
     title(xlab = paste0("PCA ", PCA1), line = 2.5, cex.lab = 2.0);
     axis(side = 2, lwd = 1, line = 0.0, cex.axis = 2.0, las = 1);
-    title(ylab = paste0("PCA ", PCA2), line = 2.5, cex.lab = 2.0, adj = NULL);
-    title(main = paste0("PCA projection of data"), line = 0.5, cex.main = 2);
+    title(ylab = paste0("PCA ", PCA2), line = 4, cex.lab = 2.0, adj = NULL);
+    title(main = paste0("PCA projection of Abalones data"), line = 0.5, cex.main = 2);
+    legend("right", legend = levels(Class),
+           fill = sort(unique(class.col)), cex = 2, ncol = 1);
     ## legend("top", legend = kAttributeLevels$Class, col = kClassColors,
     ##        pch = 16, horiz = T, cex = 2.0, seg.len = 0);
+    dev.off();
 }  ## End of PCA1vsPCA2
 ################################################################################

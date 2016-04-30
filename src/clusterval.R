@@ -1,4 +1,4 @@
-clusterval <- function (y, i) {
+clusterval <- function(y, i) {
 ### CLUSTERVAL Estimate cluster validity using entroy, purity, rand
 ### index (SMC), and Jaccard coefficient.
 # Usage:
@@ -38,7 +38,7 @@ Ay = t(Zy) %*% Zy;
 
 d1_ <- sort(unique(i));
 d2_ <- unlist(lapply(d1_, FUN = function(X, y) which(y == X)[1], y = i));
-ji <- rep(NA, times=N);
+ji <- rep(NA, times = N);
 
 for (ivalidx in 1:length(d1_)) {
     ival <- d1_[ivalidx];

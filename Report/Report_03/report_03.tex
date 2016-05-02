@@ -37,22 +37,22 @@
   consider gaussian mixture models (GMM) and hierarchial agglomerative
   clustering (HCA) to cluster the data according to the age range of abalones,
   the Apriori algorithm to investigate the possible associations among the
-  attributes of abalones, and density-based techiques gaussian kernel density
-  (GKD), k-nearest neighbour density (KNN), KNN average relative density
-  (KNNARD), and distance to K-th nearest neighbour (DKNN) for detection of
-  outliers and anomalies.  For the clustering problem, we found that GMM is not
-  able to detect the optimal number of components in the model, and therefore we
-  used the number of clusters that equals to the number of original clusters in
-  the data for the hierarchial clustering.  Comparing the two methods, we found
-  that their performance is simply the same according to the used cluster
-  validity measures.  For the association mining, we used the Apriori algorithm
-  to select the frequent itemsets and to explore the association rules (AR)
-  among them.  We found strong AR between all the measured physical
-  characteristics and the abalones age.  At the same time, no strong AR between
-  the age of the abalones and their sex were found.  As for the anomally
-  detection, we found two extreme observations that correspond to the abnormally
-  high value of height of abalones, and checked that all the observation ranking
-  methods indeed ranked those two points as outliers.
+  attributes of abalones, and several density-based techiques, namely gaussian
+  kernel density (GKD), k-nearest neighbour density (KNN), KNN average relative
+  density (KNNARD), and distance to K-th nearest neighbour (DKNN) for detection
+  of outliers and anomalies.  For the clustering problem, we found that GMM is
+  not able to detect the optimal number of components in the model, and
+  therefore we used the number of clusters that equals to the number of original
+  clusters in the data for the hierarchial clustering.  Comparing the two
+  methods, we found that their performance is simply the same according to the
+  used cluster validity measures.  For the association mining, we used the
+  Apriori algorithm to select the frequent itemsets and to explore the
+  association rules (AR) among them.  We found strong AR between all the
+  measured physical characteristics and the abalones age.  At the same time, no
+  strong AR between the age of the abalones and their sex were found.  As for
+  the anomally detection, we found two extreme observations that correspond to
+  the abnormally high value of height of abalones, and checked that all the
+  observation ranking methods indeed ranked those two points as outliers.
 \end{abstract}
 
 %%%%%%%%%%%%%%%%%%%% Clustering
@@ -116,7 +116,7 @@ of points of all age ranges are present.
 \subsection{Gaussian Mixture Model}
 A mixture model is a probabilistic model for representing the presence of
 subpopulations within an overall population, without requiring that an observed
-data set should identify the sub-population to which an individual observation
+data set should identify the subpopulation to which an individual observation
 belongs.  A gaussian mixture model (GMM) uses k multivariate Gaussians to model
 the data, and each of the gaussians is given a mixture coefficient.  With GMM,
 the primary goal is to find out the optimal number of clusters to use in the
@@ -125,28 +125,28 @@ number of clusters in the model (with minimum of two clusters) is chosen and the
 Bayesian Information Criteria (BIC = -2 $\log$L + p $\log$N) or Akaike's
 Information Criteria (AIC = -2 $\log$L + 2 p) are calculated (L is the log
 likelihood of observing the data, p is the number of parameters in the model,
-and N is the number of observations), and on the inner level the evaluation
+and N is the number of observations), and on the inner level the estimate of the
 cross-validation error (CVE) is calculated.
 
-Prior to clustering, we standartized the data (subtract the mean and divide over
-standard deviation attribute-wise).  To prevent the potential convergence
+Prior to clustering, we standartized the data (subtracted the mean and divided
+over standard deviation attribute-wise).  To prevent the potential convergence
 problems of the EM-algorithm for the GMM due to shrinking variance, we first ran
 PCA before fitting the GMM.  In theory, that should decorrelate the features as
 much as possible and make the problem of shrinking variances go away.  In
 reality, our analysis showed that the more components are included into GMM the
 better, and there is no optimal value for the number of components in the GMM
 model.  We limited ourselves to up to 20 clusters with 5-fold cross-validation.
-The results are presented in Fig.~\ref{fig:gmm}a.  Both the BIC and AIC
-information criteria and the CVE keep decreasing with the increasing number of
-components in the model, and there is no optimal value for it.  Nevertheless,
-since there are actually 5 age ranges and therefore 5 clusters in the group, we
-can look into fitting a GMM model with k = 5 components to the data.  The model
-is visualized in Fig.~\ref{fig:gmm}b.  The cluster each observation is assigned
-to is indicated by the color of the circle around the point, and each inner
-color corresponds to the true age range of the points in Fig.~\ref{fig:pca}b.
-The grey cluster mainly comprises the black and the red abalones, which means
-the younger ones ([2.47 - 13.7) years).  The yellow cluster comprises mostly
-  only the black points, which means the youngest abalones ([2.47 - 8.1) years).
+The results are presented in Fig.~\ref{fig:gmm}a.  Both BIC and AIC information
+criteria and CVE keep decreasing with the increasing number of components in the
+model, and there is no optimal value for it.  Nevertheless, since there are
+actually 5 age ranges and therefore 5 clusters in the group, we can look into
+fitting a GMM model with k = 5 components to the data.  The model is visualized
+in Fig.~\ref{fig:gmm}b.  The cluster each observation is assigned to is
+indicated by the color of the circle around the point, and each inner color
+corresponds to the true age range of the points in Fig.~\ref{fig:pca}b.  The
+grey cluster mainly comprises the black and the red abalones, which means the
+younger ones ([2.47 - 13.7) years).  The yellow cluster comprises mostly only
+  the black points, which means the youngest abalones ([2.47 - 8.1) years).
     There are mixtures of all ages in the pink cluster, and the cyan and the
     blue cluster have a substantial amount of older abalones.
 
@@ -231,28 +231,28 @@ measures obtained by different methods.
     \includegraphics[width = 0.99\textwidth]{Cluster_comparison.pdf}
   \end{minipage} \vfill
   \caption{a) Measures of cluster validity as a function of the number of
-    cluster in the HCA model.  b) Comparison of GMM and HCA models in terms of
+    clusters in the HCA model.  b) Comparison of GMM and HCA models in terms of
     cluster validity measures.}
   \label{fig:clust_quality}
 \end{figure}
 
-\newpage
+%% \newpage
 %%%%%%%%%%%%%%%%%%%% Association mining
 \section{Association mining}
 \label{sec:association}
 \subsection{Apriori algorithm}
 Prior to association mining, we had to binarize the data.  The binarization was
-performed as follows: the continuous attributes were thresholded at their median
-value and for the Sex attribute we used one out of k encoding.  After the
-binarization, we can define the set of all attributes $I = \{i_1, i_2,\dots
-,i_d\}$ and the set of all transactions $T = \{t_1, t_2, \dots ,i_N\}$.  Each
-transaction $t_i$ contains a subset of items chosen from $I$.  With the above
-definitions it is possible now to define association rules.  An association rule
-(AR) is an implication expression of the form $X \rightarrow Y$, where $X$ and
-$Y$ are disjoint itemsets.  The strength of an association rule can be measured
-in terms of its support and confidence.  Support determines how often a rule is
-applicable to a given data set, while confidence determines how frequently items
-in $Y$ appear in transactions that contain $X$.
+performed as follows: all the continuous attributes were thresholded at their
+median value, and for the Sex attribute we used one out of k encoding.  After
+the binarization, we can define the set of all attributes $I = \{i_1, i_2,\dots
+,i_d\}$ and the set of all transactions $T = \{t_1, t_2, \dots ,i_N\}$, where
+each transaction $t_i$ contains a subset of items chosen from $I$.  With the
+above definitions it is possible to define association rules.  An association
+rule (AR) is an implication expression of the form $X \rightarrow Y$, where $X$
+and $Y$ are disjoint itemsets.  The strength of an association rule can be
+measured in terms of its support and confidence.  Support determines how often a
+rule is applicable to a given data set, while confidence determines how
+frequently items in $Y$ appear in transactions that contain $X$.
 
 With the support and confidence, the association rule mining problem can be
 decomposed in two major subtasks:
@@ -291,12 +291,13 @@ $AssociationRules
 
 \subsection{Association rules interpretation}
 Interpreting the association rules, we can say that if Age is higher than the
-median then that there is higher probability for the abalone to have a higher
-viscera weight (VscrWght.H), shell weight (ShllWght.H), shucked weight
-(ShckdWght.H), whole weight (WhlWght.H), length, diameter and height.  Notice
-that there are no AR between Age and Sex.  This indicates that the Abalones age
-depends only on its physical characteristics an not on the sex. Finally, we conclude 
-that if one of the above mentioned physical characteristics is above median there is a higher probability for the abalones age to be above the median as well.
+median then that the abalone is likely to have a higher viscera weight
+(VscrWght.H), shell weight (ShllWght.H), shucked weight (ShckdWght.H), whole
+weight (WhlWght.H), length, diameter and height.  Notice that there are no AR
+between Age and Sex.  This indicates that the Abalones age depends only on its
+physical characteristics an not on sex.  1Finally, we conclude that if one of the
+above mentioned physical characteristics is above median there is a higher
+probability for the abalones age to be above the median as well.
 
 %%%%%%%%%%%%%%%%%%%% Outlier / Anomaly detection
 \section{Outlier / Anomaly detection}
@@ -382,23 +383,23 @@ For GKK, KNND, and KNNARD the lower score, the more extreme is the observation,
 and vice versa for DKNN, because it is a measure of distance.  On the basis of
 the ranking in Fig.~\ref{fig:data_ranking}a, we did the following: we noticed
 that for example observation 2052 was ranked first by each of the scoring
-methods.  We found all index numbers of the observations, that were ranked as
+methods.  We found index numbers of all the observations, that were ranked among
 the first 20 most suspicious by all four scoring methods.  Then, we plotted the
 PCA projection of the Abalones dataset with the outliers visualized as red
 circles with their index numbers below, and this is presented in
 Fig.~\ref{fig:data_ranking}b.  There are six potential outliers visualized on
 the first three PCA components, but visually only observations 2052, 1418, and
-maybe 1175 deviate significantly from the overall observations in the dataset.
-A conservative conclusion would be that there are only two outliers in the
+maybe 1175 deviate significantly from all other observations in the dataset.  A
+conservative conclusion would be that there are only two outliers in the
 Abalones dataset: observations 1418 and 2052.  Not surprisingly, they correspond
 exactly to the observations with anomal height in
 Fig.~\ref{fig:data_descriptive_analysis}a:
 \begin{verbatim}
 > data[1418, ]
-Length Diameter   Height  WhlWght ShckdWght VscrWght ShllWght    Male    Female     Infant
+       Length Diameter   Height  WhlWght ShckdWght VscrWght ShllWght    Male    Female     Infant
 1418 1.507232 1.583222 8.977051 2.816657  3.370529 2.790754 1.962384 1.31652 -0.674753 -0.6879355
 > data[2052, ]
-Length  Diameter   Height    WhlWght  ShckdWght   VscrWght   ShllWght       Male   Female     Infant
+         Length  Diameter   Height    WhlWght  ShckdWght   VscrWght   ShllWght       Male   Female     Infant
 2052 -0.5744894 -0.532863 23.68045 -0.4786856 -0.1232976 -0.5892811 -0.7566727 -0.7593967 1.481669 -0.6879355
 \end{verbatim}
 

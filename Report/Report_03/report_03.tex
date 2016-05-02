@@ -27,10 +27,11 @@
 \maketitle
 
 \begin{abstract}
-%% Objective: The objective of this third and final report is to apply the methods
-%% you have learned in the third section of the course on ``Unsupervised learning:
-%% Clustering and density estimation'' in order to cluster your data, mine for
-%% associations as well as detect if there may be outliers in your data.
+%% Objective: The objective of this third and final report is to apply the
+%% methods you have learned in the third section of the course on ``Unsupervised
+%% learning: Clustering and density estimation'' in order to cluster your data,
+%% mine for associations as well as detect if there may be outliers in your
+%% data.
 
   We apply the methods of unsupervised learning to the abalones dataset.  We
   consider gaussian mixture models (GMM) and hierarchial agglomerative
@@ -44,14 +45,14 @@
   used the number of clusters that equals to the number of original clusters in
   the data for the hierarchial clustering.  Comparing the two methods, we found
   that their performance is simply the same according to the used cluster
-  validity measures.  For the association mining, an $apriori$ algorithm was implemented 
-  to select the frequent itemsets and to explorer the Association Rules (AR) related to them. 
-  We found strong AR between some physical characteristics and the abalones age. 
-  It was also found that there is not strong AR between the age of the abalones and 
-  their sex. As for the anomally detection, we found two extreme observations
-  that correspond to the abnormally high value of height of abalones, and
-  checked that all the observation ranking methods indeed ranked those two
-  points as outliers.
+  validity measures.  For the association mining, we used the Apriori algorithm
+  to select the frequent itemsets and to explore the association rules (AR)
+  among them.  We found strong AR between all the measured physical
+  characteristics and the abalones age.  At the same time, no strong AR between
+  the age of the abalones and their sex were found.  As for the anomally
+  detection, we found two extreme observations that correspond to the abnormally
+  high value of height of abalones, and checked that all the observation ranking
+  methods indeed ranked those two points as outliers.
 \end{abstract}
 
 %%%%%%%%%%%%%%%%%%%% Clustering
@@ -121,8 +122,8 @@ the data, and each of the gaussians is given a mixture coefficient.  With GMM,
 the primary goal is to find out the optimal number of clusters to use in the
 model.  This can be achieved in the following ways.  On the outer level, the
 number of clusters in the model (with minimum of two clusters) is chosen and the
-Bayesian Information Criteria (BIC = -2$\log$L + p $\log$N) or Akaike's
-Information Criteria (AIC = -2$\log$L + 2p) are calculated (L is the log
+Bayesian Information Criteria (BIC = -2 $\log$L + p $\log$N) or Akaike's
+Information Criteria (AIC = -2 $\log$L + 2 p) are calculated (L is the log
 likelihood of observing the data, p is the number of parameters in the model,
 and N is the number of observations), and on the inner level the evaluation
 cross-validation error (CVE) is calculated.
@@ -240,20 +241,46 @@ measures obtained by different methods.
 \section{Association mining}
 \label{sec:association}
 \subsection{Apriori algorithm}
-Prior to using the association mining, first the data have to be expressed in a binary format. The binarization of the Abalone data was made using the following criteria: The continuous attributes were binarized by their median value and the factor attributes were binarized by each one of their factors. After the binarization, we can define $I=\{i_1, i_2,\ldots , i_d\}$ as the set of all attributes and $T=\{t_1, t_2, \ldots ,i_N\}$ as the set of all transactions (each data observation). Each transaction $t_i$ contains a subset of items chosen from $I$. With the above definitions it is possible to define Association rules. An association rule (AR) is an implication expression of the form $X \rightarrow Y$, where $X$ and $Y$ are disjoint itemsets. The strength of an association rule can be measured in terms of its support and confidence. Support determines how often a rule is applicable to a given data set, while confidence determines how frequently items in $Y$ appears in transactions that contain $X$.
+Prior to association mining, we had to binarize the data.  The binarization was
+performed as follows: the continuous attributes were thresholded at their median
+value and for the Sex attribute we used one out of k encoding.  After the
+binarization, we can define the set of all attributes $I = \{i_1, i_2,\dots
+,i_d\}$ and the set of all transactions $T = \{t_1, t_2, \dots ,i_N\}$.  Each
+transaction $t_i$ contains a subset of items chosen from $I$.  With the above
+definitions it is possible now to define association rules.  An association rule
+(AR) is an implication expression of the form $X \rightarrow Y$, where $X$ and
+$Y$ are disjoint itemsets.  The strength of an association rule can be measured
+in terms of its support and confidence.  Support determines how often a rule is
+applicable to a given data set, while confidence determines how frequently items
+in $Y$ appear in transactions that contain $X$.
 
-With the support and confidence, the association rule mining problem can be decompose in two major subtasks: 1) Find all the item sets that satisfy a minimum value of support. These itemsets are called frequent itemsets. 2) Extract all high-confidence rules from the frequent itemsets found in the previous step. These rules are called strong rules.
+With the support and confidence, the association rule mining problem can be
+decomposed in two major subtasks:
+\begin{enumerate}
+\item Find all the itemsets that satisfy a minimum value of support. These
+  itemsets are called frequent itemsets.
+\item Extract all high-confidence rules from the frequent itemsets found in the
+  previous step. These rules are called strong rules.
+\end{enumerate}
 
-Performing the subtasks is computational demanding, for that reason the $apriori$ principle is used. The $apriori$ principle says that \textit{if an itemset is frequent, then all of its subsets must also be frequent}. This reduce the number of candidate itemsets and the number of association rules to be compared.
+Performing the subtasks is computationally demanding, and for that reason the
+$apriori$ principle is used.  The $apriori$ principle states that \textit{if an
+  itemset is frequent, then all of its subsets must also be frequent}.  The
+principle allows to reduce the number of candidate itemsets to consider and the
+number of association rules to be compared.
 
-The $apriori$ algorithm was implemented, results for the subtask number one on the Abalone data set with a minimum support of 65\% resulted in the following itemsets.
+With the Apriori algorithm supplied in the R Toolbox of the course, results for
+the subtask number one with a minimum support of 65\% are the following:
 \begin{verbatim}
 [1] "Apriori analysis done, extracting results"
 $FreqItemSets
 [1] "Age.H[Sup. 7e+01]"
 \end{verbatim}
 
-Results indicate that only the attribute Age.H (Age above the median) presents a support higher than 65\%. Then, the subtask number two was performed to explore the AR between Age.H and the rest of the attributes. Results for the AR with a minimum confidence of 65\% can be seen next.
+The results indicate that only the attribute Age.H (Age above the median)
+presents a support higher than 65\%.  Then, the subtask number two was performed
+to explore the AR between Age.H and the rest of the attributes.  The results for
+the AR with a minimum confidence of 65\% are:
 \begin{verbatim}
 $AssociationRules
 [1] "Age.H <- [Conf. 7e+01,Sup. 7e+01]"            "VscrWght.H <- Age.H[Conf. 7e+01,Sup. 5e+01]" 
@@ -263,8 +290,15 @@ $AssociationRules
 \end{verbatim}
 
 \subsection{Association rules interpretation}
-Exploring the association rules, we can see that the presence of Age higher than the median implies that there is higher probability for the Abalones to have higher viscera weight (VscrWght.H), shell wieght (ShllWght.H), Shucked weight (ShckdWght.H), Whole weight (WhlWght.H), length, diameter and height. Notice that there is not AR between the Age and Sex. This indicates that the Abalones age depends only on its physical characteristics an not on the Abalones sex. Finally, we conclude that the presence of the mentioned physical characteristics leads to higher Abalones age.
-
+Interpreting the association rules, we can say that if Age is higher than the
+median then that there is higher probability for the abalone to have a higher
+viscera weight (VscrWght.H), shell weight (ShllWght.H), shucked weight
+(ShckdWght.H), whole weight (WhlWght.H), length, diameter and height.  Notice
+that there are no AR between Age and Sex.  This indicates that the Abalones age
+depends only on its physical characteristics an not on the sex.  {\color{red}
+  Finally, we conclude that if one of the abovementioned physical
+  characteristics is above median than the age of abalone is also above median.}
+{\bf Is such a conclusion true? - Dmitriy}
 
 %%%%%%%%%%%%%%%%%%%% Outlier / Anomaly detection
 \section{Outlier / Anomaly detection}
@@ -340,7 +374,9 @@ Fig.~\ref{fig:data_ranking}a.
   \caption{a) Ranking of observations of the Abalones dataset by GKD, KNND,
     KNNARD, DKNN for k = 30, first 20 observations showed.  b) PCA projection of
     Abalones data on three first principal components with outliers visualized
-    as red circles with corresponding index numbers.}
+    as red circles with corresponding index numbers.  Outliers are data points
+    that are among the first 20 in rankings of all four abovementioned ranking
+    methods.}
   \label{fig:data_ranking}
 \end{figure}
 
@@ -380,7 +416,11 @@ original clusters in the data for the hierarchial clustering.  Comparing the two
 methods, we found that their performance is simply the same according to the
 used cluster validity measures.
 
-For the association mining, we found that the only age above the median (Age.H) is a frequent itemset. The AR found shown that the abalones age presents a strong relation with the mentioned physical characteristics. Also, no evidence that associate abalones age with their sex were found, indicating that the abalones age can be explained only by their physical characteristics.
+For the association mining, we found that the only frequent itemset is the age
+above the median (Age.H).  The AR found shown that the abalones age presents a
+strong relation with all the physical characteristics.  Also, no association
+rules between the age of abalones and their sex were found, indicating that the
+age of abalones can be explained only by their physical characteristics.
 
 As for the anomally detection, we found two extreme observations that correspond
 to the abnormally high value of height of abalones, and checked that all the

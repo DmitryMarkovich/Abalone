@@ -44,8 +44,11 @@
   used the number of clusters that equals to the number of original clusters in
   the data for the hierarchial clustering.  Comparing the two methods, we found
   that their performance is simply the same according to the used cluster
-  validity measures.  For the association mining {\color{red} JLV add summary
-    here!}.  As for the anomally detection, we found two extreme observations
+  validity measures.  For the association mining, an $apriori$ algorithm was implemented 
+  to select the frequent itemsets and to explorer the Association Rules (AR) related to them. 
+  We found strong AR between some physical characteristics and the abalones age. 
+  It was also found that there is not strong AR between the age of the abalones and 
+  their sex. As for the anomally detection, we found two extreme observations
   that correspond to the abnormally high value of height of abalones, and
   checked that all the observation ranking methods indeed ranked those two
   points as outliers.
@@ -236,18 +239,32 @@ measures obtained by different methods.
 %%%%%%%%%%%%%%%%%%%% Association mining
 \section{Association mining}
 \label{sec:association}
-%% In this part of the report you are to investigate if there are associations
-%% among your attributes based on association mining. In order to do so you will
-%% need to make your data binary, see also exercise 10. (For categoric variables
-%% you can use the one-out-of-K coding format). You will need to save the binarized
-%% data into a text file that can be analyzed by the Apriori algorithm.
+\subsection{Apriori algorithm}
+Prior to using the association mining, first the data have to be expressed in a binary format. The binarization of the Abalone data was made using the following criteria: The continuous attributes were binarized by their median value and the factor attributes were binarized by each one of their factors. After the binarization, we can define $I=\{i_1, i_2,\ldots , i_d\}$ as the set of all attributes and $T=\{t_1, t_2, \ldots ,i_N\}$ as the set of all transactions (each data observation). Each transaction $t_i$ contains a subset of items chosen from $I$. With the above definitions it is possible to define Association rules. An association rule (AR) is an implication expression of the form $X \rightarrow Y$, where $X$ and $Y$ are disjoint itemsets. The strength of an association rule can be measured in terms of its support and confidence. Support determines how often a rule is applicable to a given data set, while confidence determines how frequently items in $Y$ appears in transactions that contain $X$.
 
-%% \begin{enumerate}
-%% \item Run the Apriori algorithm on your data and find frequent itemsets as well
-%%   as association rules with high confidence.
-%% \item Try and interpret the association rules generated.
-%% \end{enumerate}
-{\color{red} JLV adds text here!}
+With the support and confidence, the association rule mining problem can be decompose in two major subtasks: 1) Find all the item sets that satisfy a minimum value of support. These itemsets are called frequent itemsets. 2) Extract all high-confidence rules from the frequent itemsets found in the previous step. These rules are called strong rules.
+
+Performing the subtasks is computational demanding, for that reason the $apriori$ principle is used. The $apriori$ principle says that \textit{if an itemset is frequent, then all of its subsets must also be frequent}. This reduce the number of candidate itemsets and the number of association rules to be compared.
+
+The $apriori$ algorithm was implemented, results for the subtask number one on the Abalone data set with a minimum support of 65\% resulted in the following itemsets.
+\begin{verbatim}
+[1] "Apriori analysis done, extracting results"
+$FreqItemSets
+[1] "Age.H[Sup. 7e+01]"
+\end{verbatim}
+
+Results indicate that only the attribute Age.H (Age above the median) presents a support higher than 65\%. Then, the subtask number two was performed to explore the AR between Age.H and the rest of the attributes. Results for the AR with a minimum confidence of 65\% can be seen next.
+\begin{verbatim}
+$AssociationRules
+[1] "Age.H <- [Conf. 7e+01,Sup. 7e+01]"            "VscrWght.H <- Age.H[Conf. 7e+01,Sup. 5e+01]" 
+[3] "ShllWght.H <- Age.H[Conf. 7e+01,Sup. 5e+01]"  "ShckdWght.H <- Age.H[Conf. 7e+01,Sup. 4e+01]"
+[5] "WhlWght.H <- Age.H[Conf. 7e+01,Sup. 5e+01]"   "Length.H <- Age.H[Conf. 7e+01,Sup. 5e+01]"   
+[7] "Diameter.H <- Age.H[Conf. 7e+01,Sup. 5e+01]"  "Height.H <- Age.H[Conf. 7e+01,Sup. 5e+01]"
+\end{verbatim}
+
+\subsection{Association rules interpretation}
+Exploring the association rules, we can see that the presence of Age higher than the median implies that there is higher probability for the Abalones to have higher viscera weight (VscrWght.H), shell wieght (ShllWght.H), Shucked weight (ShckdWght.H), Whole weight (WhlWght.H), length, diameter and height. Notice that there is not AR between the Age and Sex. This indicates that the Abalones age depends only on its physical characteristics an not on the Abalones sex. Finally, we conclude that the presence of the mentioned physical characteristics leads to higher Abalones age.
+
 
 %%%%%%%%%%%%%%%%%%%% Outlier / Anomaly detection
 \section{Outlier / Anomaly detection}
@@ -363,7 +380,7 @@ original clusters in the data for the hierarchial clustering.  Comparing the two
 methods, we found that their performance is simply the same according to the
 used cluster validity measures.
 
-For the association mining {JLV \color{red} add summary here!}.
+For the association mining, we found that the only age above the median (Age.H) is a frequent itemset. The AR found shown that the abalones age presents a strong relation with the mentioned physical characteristics. Also, no evidence that associate abalones age with their sex were found, indicating that the abalones age can be explained only by their physical characteristics.
 
 As for the anomally detection, we found two extreme observations that correspond
 to the abnormally high value of height of abalones, and checked that all the
